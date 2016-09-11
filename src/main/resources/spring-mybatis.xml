@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:task="http://www.springframwork.org/schema/task" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:cache="http://www.springframework.org/schema/cache" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-4.3.xsd    
+                        http://www.springframework.org/schema/tx    
+                        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+                        http://www.springframework.org/schema/task    
+                        http://www.springframework.org/schema/task/spring-task-4.3.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+                        http://www.springframework.org/schema/cache
+                        http://www.springframework.org/schema/cache/spring-cache-4.3.xsd">  
+
+
+	<!-- 引入配置文件 -->
+	<context:property-placeholder location="classpath:config.properties" />
+
+	<!-- 注解自动扫描 -->
+	<context:component-scan base-package="com.amor.web"></context:component-scan>
+	
+	<!-- 数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		
+		<!-- 初始化连接池大小 -->
+		<property name="initialSize" value="${ds.initialSize}"></property>
+		<!-- 最大连接数 -->
+		<property name="maxActive" value="${ds.maxActive}"></property>
+		<!-- 最大空闲数 -->
+		<property name="maxIdle" value="${ds.maxIdle}"></property>
+		<!-- 最小空闲数 -->
+		<property name="minIdle" value="${ds.minIdle}"></property>
+		<!-- 最大等待时间 单位ms -->
+		<property name="maxWait" value="${ds.maxWait}"></property>
+		<!-- 自动回收超时连接 -->
+		<property name="removeAbandoned" value="true"></property>
+		<!-- 自动回收超时连接时间 单位s -->
+		<property name="removeAbandonedTimeout" value="120"></property>
+	</bean>
+	
+	<!-- Session工厂 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 事务管理 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 注解方式配置事务 -->
+	<tx:annotation-driven transaction-manager="txManager" />
+	
+	<!-- 拦截器方式配置事务 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="search*" propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="load*" propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="count*" propagation="SUPPORTS" read-only="true"/>
+			
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- aop 事务管理 -->
+	<aop:config>
+		<aop:pointcut id="txPointcut" expression="execution(* com.amor.service.impl.*Impl.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
+	</aop:config>
+	
+	<!-- 缓存管理 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehCacheManagerFactory"></bean>
+	<bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:ehcache.xml"></bean>
+	
+	<!-- 注解方式配置缓存 -->
+	<cache:annotation-driven cache-manager="cacheManager"/>
+	
+</beans>

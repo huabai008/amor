@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache name="txswx-ehcache" updateCheck="false">
+	<defaultCache
+		maxElementsInMemory="10000"
+		eternal="true"
+		timeToIdleSeconds="300"
+		timeToLiveSeconds="600"
+		overflowToDisk="true"
+		diskPersistent="true"
+		maxEntriesLocalDisk="100000"
+		/>
+</ehcache>

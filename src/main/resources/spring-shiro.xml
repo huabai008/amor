@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:util="http://www.springframework.org/schema/util"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd    
+                        http://www.springframework.org/schema/util    
+                        http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+                        
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"></property>
+		<property name="loginUrl" value="/rest/page/login"></property>
+		<property name="successUrl" value="/rest/index"></property>
+		<property name="unauthorizedUrl" value="/rest/page/401"></property>
+		<property name="filterChainDefinitions">
+			<value>
+				<!-- public -->
+				/app/**=anon
+				/rest/auth/**=anon
+				/rest/index=anon
+				<!-- protected -->
+				/**=authc
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 安全管理 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realms">
+			<list>
+				<ref bean="securityRealm"/>
+			</list>
+		</property>
+		<!-- <property name="cacheManager" ref="shiroEhcacheManager"></property> -->
+		<!-- <property name="sessionManager" ref="sessionoManager"></property> -->
+	</bean>
+	
+	<!-- bean id="securityRealm" class=""></bean-->
+	<bean id="shiroEhcacheManger" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"></property>
+	</bean>
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionDAO" ref="sessionDAO"></property>
+	</bean>
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO"></bean>
+	
+    <!-- Shiro生命周期管理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>    
+    
+    <!-- Shiro密码MD5加密 -->
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"></bean>          
+    
+          
+</beans>
