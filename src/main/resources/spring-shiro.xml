@@ -10,15 +10,15 @@
                         
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager"></property>
-		<property name="loginUrl" value="/rest/page/login"></property>
+		<property name="loginUrl" value="/rest/login"></property>
 		<property name="successUrl" value="/rest/index"></property>
-		<property name="unauthorizedUrl" value="/rest/page/401"></property>
+		<property name="unauthorizedUrl" value="/rest/401"></property>
 		<property name="filterChainDefinitions">
 			<value>
 				<!-- public -->
 				/app/**=anon
-				/rest/auth/**=anon
-				/rest/index=anon
+				/assets/** = anon
+				/rest/auth/login=anon
 				<!-- protected -->
 				/**=authc
 			</value>
