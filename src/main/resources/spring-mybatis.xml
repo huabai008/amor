@@ -25,7 +25,7 @@
 	<context:property-placeholder location="classpath:config.properties" />
 
 	<!-- 注解自动扫描 -->
-	<context:component-scan base-package="com.amor.web"></context:component-scan>
+	<context:component-scan base-package="com.amor"></context:component-scan>
 	
 	<!-- 数据源 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
