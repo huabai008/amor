@@ -16,7 +16,7 @@ public class CommonController {
 	/**
 	 * 首页
 	 */
-	@RequestMapping("index")
+	@RequestMapping("/index")
 	public String index(HttpServletRequest request){
 		return "index";
 	}

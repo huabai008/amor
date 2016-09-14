@@ -99,4 +99,20 @@ public interface APrivilegeMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(APrivilege record);
+    
+    @Select({
+        "select",
+        "id, role_id, privilege_code, operation_code, create_time, update_time",
+        "from A_PRIVILEGE",
+        "where id = #{id,jdbcType=INTEGER}"
+    })
+    @Results({
+        @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
+        @Result(column="role_id", property="roleId", jdbcType=JdbcType.INTEGER),
+        @Result(column="privilege_code", property="privilegeCode", jdbcType=JdbcType.VARCHAR),
+        @Result(column="operation_code", property="operationCode", jdbcType=JdbcType.VARCHAR),
+        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
+    })
+    List<APrivilege> selectByParentId(Integer id);
 }

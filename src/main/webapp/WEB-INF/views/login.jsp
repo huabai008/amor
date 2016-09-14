@@ -8,5 +8,12 @@
 </head>
 <body>
 login
+<form action="auth/login" method="post">
+	<label>用户名</label>
+	<input id="username" name="username" />
+	<label>密码</label>
+	<input id="password" name="password" type="password"/>
+	<button type="submit">登录</button>
+</form>
 </body>
 </html>

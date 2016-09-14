@@ -18,7 +18,9 @@
 				<!-- public -->
 				/app/**=anon
 				/assets/** = anon
-				/rest/auth/login=anon
+				/rest/auth/**=anon
+				/rest/login=anon
+				/rest/index=anon
 				<!-- protected -->
 				/**=authc
 			</value>
@@ -32,12 +34,15 @@
 				<ref bean="securityRealm"/>
 			</list>
 		</property>
-		<!-- <property name="cacheManager" ref="shiroEhcacheManager"></property> -->
-		<!-- <property name="sessionManager" ref="sessionoManager"></property> -->
+		<!-- 
+		<property name="cacheManager" ref="shiroEhcacheManager"></property>
+		<property name="sessionManager" ref="sessionoManager"></property>
+		-->
 	</bean>
 	
-	<!-- bean id="securityRealm" class=""></bean-->
-	<bean id="shiroEhcacheManger" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+	<!-- 通过注解 -->
+	<!-- bean id="securityRealm" class="com.amor.web.security.SecurityRealm" /-->
+	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
 		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"></property>
 	</bean>
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">

@@ -25,7 +25,10 @@
 	<context:property-placeholder location="classpath:config.properties" />
 
 	<!-- 注解自动扫描 -->
-	<context:component-scan base-package="com.amor"></context:component-scan>
+	<context:component-scan base-package="com.amor">
+		<!-- 不扫描@Controller -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
 	
 	<!-- 数据源 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -55,6 +58,12 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
+	<!-- mybatis 扫描所有的mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.amor.orm.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	
 	<!-- 事务管理 -->
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
@@ -81,6 +90,7 @@
 	</tx:advice>
 	
 	<!-- aop 事务管理 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	<aop:config>
 		<aop:pointcut id="txPointcut" expression="execution(* com.amor.service.impl.*Impl.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
