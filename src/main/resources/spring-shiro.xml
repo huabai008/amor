@@ -18,6 +18,7 @@
 				<!-- public -->
 				/app/**=anon
 				/assets/** = anon
+				/rest/product/** = anon
 				/rest/**/login=anon
 				<!-- protected -->
 				/rest/auth/**=authc
