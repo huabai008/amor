@@ -1,7 +1,5 @@
 package com.amor.web.security;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -14,25 +12,14 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.stereotype.Component;
 
-import com.amor.orm.model.AAuthority;
-import com.amor.orm.model.APrivilege;
-import com.amor.orm.model.ARole;
-import com.amor.service.AuthorityService;
-import com.amor.service.PrivilegeService;
-import com.amor.service.RoleService;
+import com.amor.orm.model.AUser;
+import com.amor.service.UserService;
 
 @Component(value = "securityRealm")
 public class SecurityRealm extends AuthorizingRealm {
 
 	@Resource
-	private AuthorityService authorityService;
-
-	@Resource
-	private RoleService roleService;
-
-	@Resource
-	private PrivilegeService privilegeService;
-	
+	private UserService userService;
 
 	/**
 	 * 授权
@@ -42,16 +29,6 @@ public class SecurityRealm extends AuthorizingRealm {
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 		String username = String.valueOf(principals.getPrimaryPrincipal());
 
-		final AAuthority auth = authorityService.selectByName(username);
-		final List<ARole> roleList = roleService.selectByParentId(auth.getId());
-		for (ARole role : roleList) {
-			authorizationInfo.addRole(role.getType());
-			
-			final List<APrivilege> privilegeList = privilegeService.selectByParentId(role.getId());
-			for(APrivilege privilege : privilegeList){
-				authorizationInfo.addStringPermission(privilege.getOperationCode());
-			}
-		}
 		return authorizationInfo;
 	}
 
@@ -60,12 +37,13 @@ public class SecurityRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-		String username = String.valueOf(token.getPrincipal());
-		String password = new String((char[]) token.getCredentials());
-		AAuthority auth = authorityService.authentication(username, password);
-		if (auth == null)
+		AUser user = new AUser();
+		user.setUsername(String.valueOf(token.getPrincipal()));
+		user.setPassword(new String((char[]) token.getCredentials()));
+		user = userService.authentication(user);
+		if (user == null)
 			throw new AuthenticationException("登录失败，用户名或密码错误。");
-		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, password, getName());
+		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
 		return authenticationInfo;
 	}
 

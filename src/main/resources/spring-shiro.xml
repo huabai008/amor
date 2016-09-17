@@ -18,11 +18,11 @@
 				<!-- public -->
 				/app/**=anon
 				/assets/** = anon
-				/rest/auth/**=anon
-				/rest/login=anon
-				/rest/index=anon
+				/rest/**/login=anon
 				<!-- protected -->
-				/**=authc
+				/rest/auth/**=authc
+				/**=user
+				
 			</value>
 		</property>
 	</bean>

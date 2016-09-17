@@ -2,6 +2,7 @@ package com.amor.web.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
@@ -14,8 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.amor.orm.model.AAuthority;
-import com.amor.service.AuthorityService;
+import com.amor.orm.model.AUser;
+import com.amor.service.UserService;
 
 /**
  * 授权与验证控制器
@@ -23,14 +24,14 @@ import com.amor.service.AuthorityService;
  *
  */
 @Controller
-@RequestMapping(value="/auth")
-public class AuthorizeController {
+@RequestMapping(value="/user")
+public class UserController {
 	
 	@Resource
-	private AuthorityService authorityService;
+	private UserService userService;
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String login(@Valid AAuthority auth, BindingResult result, HttpServletRequest request, Model model){
+	public String login(@Valid AUser user, BindingResult result, HttpServletRequest request, Model model){
 		try{
 			Subject subject = SecurityUtils.getSubject();
 			if(subject.isAuthenticated()){
@@ -40,8 +41,8 @@ public class AuthorizeController {
 				model.addAttribute("error", "参数错误！");
 				return "login";
 			}
-			subject.login(new UsernamePasswordToken(auth.getUsername(), auth.getPassword()));
-			final AAuthority authInfo = authorityService.selectByName(auth.getUsername());
+			subject.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
+			final AUser authInfo = user;
 			request.getSession().setAttribute("userInfo", authInfo);
 		}catch(AuthenticationException e){
 			model.addAttribute("error", e.getMessage());
@@ -50,4 +51,11 @@ public class AuthorizeController {
 		return "redirect:/";
 	}
 
+	@RequestMapping(value="/logout", method=RequestMethod.GET)
+	public String logout(HttpSession session){
+		session.removeAttribute("userInfo");
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+		return "login";
+	}
 }

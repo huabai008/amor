@@ -82,7 +82,7 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>/rest/index</welcome-file>
+		<welcome-file>rest/index</welcome-file>
 	</welcome-file-list>
 	<error-page>
 		<error-code>404</error-code>
