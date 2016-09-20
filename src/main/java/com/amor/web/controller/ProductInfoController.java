@@ -27,7 +27,9 @@ public class ProductInfoController {
 	private ProductInfoService productInfoSerivce;
 	
 	@RequestMapping(value="/")
-	public String index() {
+	public String index(Model model) {
+		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
+		model.addAttribute("typeMap", map);
 		return "product_main";
 	}
 	
@@ -50,6 +52,8 @@ public class ProductInfoController {
 	
 	@RequestMapping(value="/new", method=RequestMethod.POST)
 	public String submit(@Valid AProduct product, HttpServletRequest request, Model model) {
+		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
+		model.addAttribute("typeMap", map);
 		try {
 			// common attributes
 			product.setItemCode(request.getParameter("item_no"));
@@ -59,14 +63,16 @@ public class ProductInfoController {
 			product.setPriceAgent(Double.parseDouble(request.getParameter("price_agent")));
 			product.setPriceRent(Double.parseDouble(request.getParameter("price_rent")));
 			product.setPriceSell(Double.parseDouble(request.getParameter("price_sell")));
+			product.setPriceAlliance(Double.parseDouble(request.getParameter("price_alliance")));
 			product.setCreateTime(new Date());
 			product.setUpdateTime(new Date());
 			product.setCreateUid(Integer.parseInt(request.getParameter("user_no")));
 			product.setUpdateUid(Integer.parseInt(request.getParameter("user_no")));
 			
 			// wedding
-			if (type == 0) {
-				product.setTrends(request.getParameter("trends"));
+			if (type == 0 || type == 1) {
+				String[] trends = request.getParameterValues("trends");
+				product.setTrends(String.join(",", trends));
 				product.setSilhouette(request.getParameter("silhouette"));
 				product.setNeckline(request.getParameter("waistline"));
 				product.setWaistline(request.getParameter("waistline"));
@@ -91,6 +97,7 @@ public class ProductInfoController {
 			
 			productInfoSerivce.insertProductInfo(product);
 			model.addAttribute("success", 1);
+			
 			return "product_main";
 		} catch (Exception err) {
 			model.addAttribute("success", 0);

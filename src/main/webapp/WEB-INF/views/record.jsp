@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
@@ -189,11 +190,20 @@ String productType = request.getParameter("item_type");
 									<input class="form-control" id="item_no" name="item_no" value=""></input>
 								</div>
 								<div class="clearfix"></div>
-								<% if (productType.compareTo("0") == 0) { %>
+								<% if (productType.compareTo("0") == 0 || productType.compareTo("1") == 0) { %>
 								<div class="col-xs-4">
 									<label>风格</label>
-									<form:select path="trendsMap" items="${trendsMap}" class="form-control" id="trends" name="trends" />  
-									<!-- <input class="form-control" id="trends" name="trends" value=""></input> -->
+									<div class="form-control">
+										<c:forEach var="t" items="${trendsMap}">
+										<div id="trends" class="checkbox-inline">
+										  <label>
+										    <input name="trends" type="checkbox" value="${t.key}">${t.value}
+										  </label>
+										</div>
+										</c:forEach>
+									</div>
+									<!-- <form:select path="trendsMap" items="${trendsMap}" class="form-control" id="trends" name="trends" />  
+									<input class="form-control" id="trends" name="trends" value=""></input> -->
 								</div>
 								<div class="col-xs-4">
 									<label>裙型</label>
@@ -239,22 +249,22 @@ String productType = request.getParameter("item_type");
 								<div class="clearfix"></div>
 								<div class="col-xs-4">
 									<label>白领白袖</label>
-									<div class="btn-group" data-toggle="buttons">
-									  <label class="btn btn-primary active">
+									<div class="form-control">
+									  <label class="radio-inline">
 									    <input type="radio" name="white_collar" value="1" id="white_collar1" autocomplete="off" checked> 是
 									  </label>
-									  <label class="btn btn-primary">
+									  <label class="radio-inline">
 									    <input type="radio" name="white_collar" value="0" id="white_collar0" autocomplete="off"> 否
 									  </label>
 									</div>
 								</div>
 								<div class="col-xs-4">
 									<label>口袋</label>
-									<div class="btn-group" data-toggle="buttons">
-									  <label class="btn btn-primary active">
+									<div class="form-control">
+									  <label class="radio-inline">
 									    <input type="radio" name="pocket" value="1" id="pocket1" autocomplete="off" checked> 有
 									  </label>
-									  <label class="btn btn-primary">
+									  <label class="radio-inline">
 									    <input type="radio" name="pocket" value="0" id="pocket0" autocomplete="off"> 无
 									  </label>
 									</div>
@@ -265,21 +275,26 @@ String productType = request.getParameter("item_type");
 								</div>
 								<div class="clearfix"></div>
 								<% } %>
-								<div class="col-xs-3">
+								<div class="col-xs-4">
 									<label>出厂价</label>
 									<input class="form-control" id="price_cost" name="price_cost" value="" required></input>
 								</div>
-								<div class="col-xs-3">
+								<div class="col-xs-4">
 									<label>代理价</label>
 									<input class="form-control" id="price_agent" name="price_agent" value="" required></input>
 								</div>
-								<div class="col-xs-3">
+								<div class="col-xs-4">
 									<label>租赁价</label>
 									<input class="form-control" id="price_rent" name="price_rent" value="" required></input>
 								</div>
-								<div class="col-xs-3">
+								<div class="clearfix"></div>
+								<div class="col-xs-4">
 									<label>零售价</label>
 									<input class="form-control" id="price_sell" name="price_sell" value="" required></input>
+								</div>
+								<div class="col-xs-4">
+									<label>加盟商价</label>
+									<input class="form-control" id="price_alliance" name="price_alliance" value="" required></input>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-xs-4">
@@ -328,7 +343,8 @@ String productType = request.getParameter("item_type");
         $( document ).ready(function() {
             console.log( "ready!" );
             $("#product_info").validate();
-            $('select#item_type').val("<%=productType%>");
+            $('select#type').val("<%=productType%>");
+            //$('select#type').attr("disabled", true);
         });
         </script>
 

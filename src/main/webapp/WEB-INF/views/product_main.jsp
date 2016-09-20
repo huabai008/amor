@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 String path = request.getContextPath();
@@ -199,17 +200,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                     		<div class="row">
                     			<div class="col-xs-6">
 									<label><i>*</i>产品类型</label>
-									<select class="form-control" id="item_type" name="item_type">
-									  <option value="0">婚纱</option>
-									  <option value="1">礼服</option>
-									  <option value="2">衬衣</option>
-									  <option value="3">西服</option>
-									  <option value="4">出门纱</option>
-									  <option value="5">主纱</option>
-									  <option value="6">礼服</option>
-									  <option value="7">伴娘服</option>
-									  <option value="8">回门礼服</option>
-									</select>
+									<form:select path="typeMap" items="${typeMap}" class="form-control" id="item_type" name="item_type" />
 								</div>
 								<div class="col-xs-6">
 									<label><i>*</i>货号</label>
