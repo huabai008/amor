@@ -5,7 +5,6 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-String productType = request.getParameter("item_type");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -161,15 +160,22 @@ String productType = request.getParameter("item_type");
                             <ul class="page-breadcrumb breadcrumb">
                                 <li>
                                     <i class="fa fa-home"></i>
-                                    <a href="javascript:;">
+                                    <a href="#">
                                         首页
                                     </a>
                                     <i class="fa fa-angle-right"></i>
                                 </li>
                                 <li>
-                                    <a href="javascript:;">
-                                        Dashboard
+                                    <a href="/rest/product/">
+                                        产品信息
                                     </a>
+                                    <i class="fa fa-angle-right"></i>
+                                </li>
+                                <li class="active">
+                                 <c:choose>
+                                   <c:when test="${product != null}">更新产品信息</c:when>
+                                   <c:otherwise>新增产品信息</c:otherwise>
+                                 </c:choose>
                                 </li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
@@ -179,25 +185,55 @@ String productType = request.getParameter("item_type");
 
                     <!-- BEGIN DASHBOARD STATS -->
                     <div id="main-content">
+                      <c:choose>
+                        <c:when test="${ product == null }">
                     	<form action="/amor/rest/product/new" method="POST" role="form" id="product_info">
+                        </c:when>
+                        <c:otherwise>
+                        <form action="/amor/rest/product/update" method="POST" role="form" id="product_info">
+                        </c:otherwise>
+                      </c:choose>
                     		<div class="row">
                     			<div class="col-xs-6">
 									<label><i>*</i>产品类型</label>
-									<form:select path="typeMap" items="${typeMap}" class="form-control" id="type" name="type" />
+									<form:select path="typeMap" class="form-control" id="type" name="type">
+									  <c:forEach items="${typeMap}" var="s">
+									  <c:choose>
+							            <c:when test="${(product != null && s.key == product.itemType) || s.key == item_type}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-6">
 									<label><i>*</i>货号</label>
-									<input class="form-control" id="item_no" name="item_no" value=""></input>
+									<c:if test="${product == null}">
+									  <input class="form-control" id="item_no" name="item_no" value=""></input>
+									</c:if>
+									<c:if test="${product != null}">
+									  <input class="form-control" id="item_no" name="item_no" value="${product.itemCode}"></input>
+									</c:if>
 								</div>
 								<div class="clearfix"></div>
-								<% if (productType.compareTo("0") == 0 || productType.compareTo("1") == 0) { %>
+								<c:if test="${(product != null && product.itemType == 0 || product.itemType == 1) || item_type == 0 || item_type == 1 }">
 								<div class="col-xs-4">
 									<label>风格</label>
 									<div class="form-control">
 										<c:forEach var="t" items="${trendsMap}">
 										<div id="trends" class="checkbox-inline">
 										  <label>
+										   <c:choose>
+										    <c:when test="${product != null && prod_trds[t.key] == 1}">
+										    <input name="trends" type="checkbox" value="${t.key}" checked>${t.value}
+										    </c:when>
+										    <c:otherwise>
 										    <input name="trends" type="checkbox" value="${t.key}">${t.value}
+										    </c:otherwise>
+										   </c:choose>
 										  </label>
 										</div>
 										</c:forEach>
@@ -207,54 +243,166 @@ String productType = request.getParameter("item_type");
 								</div>
 								<div class="col-xs-4">
 									<label>裙型</label>
-									<form:select path="silhouetteMap" items="${silhouetteMap}" class="form-control" id="silhouette" name="silhouette" />
+									<form:select path="silhouetteMap" class="form-control" id="silhouette" name="silhouette">
+									  <c:forEach items="${silhouetteMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.silhouette}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-4">
 									<label>领型</label>
-									<form:select path="necklineMap" items="${necklineMap}" class="form-control" id="neckline" name="neckline" />
+									<form:select path="necklineMap" class="form-control" id="neckline" name="neckline">
+									  <c:forEach items="${necklineMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.neckline}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-xs-4">
 									<label>腰部</label>
-									<form:select path="waistlineMap" items="${waistlineMap}" class="form-control" id="waistline" name="waistline" />
+									<form:select path="waistlineMap" class="form-control" id="waistline" name="waistline">
+									  <c:forEach items="${waistlineMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.waistline}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-4">
 									<label>袖长</label>
-									<form:select path="sleeveMap" items="${sleeveMap}" class="form-control" id="sleeve" name="sleeve" />
+									<form:select path="sleeveMap" class="form-control" id="sleeve" name="sleeve">
+									  <c:forEach items="${sleeveMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.sleeve}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-2">
 									<label>颜色</label>
-									<form:select path="colorMap" items="${colorMap}" class="form-control" id="color" name="color" />
+									<form:select path="colorMap" class="form-control" id="color" name="color">
+									  <c:forEach items="${colorMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.color}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-2">
 									<label>尺码</label>
-									<form:select path="sizeMap" items="${sizeMap}" class="form-control" id="size" name="size" />
+									<form:select path="sizeMap" class="form-control" id="size" name="size">
+									  <c:forEach items="${sizeMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key.toString() == product.size}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="clearfix"></div>
-								
-								<% } %>
-								<% if (productType.compareTo("2") == 0) { %>
+								</c:if>
+								<c:if test="${(product != null && product.itemType == 2) || item_type  == 2}">
 								<div class="col-xs-4">
 									<label>版型</label>
-									<form:select path="versionMap" items="${versionMap}" class="form-control" id="version" name="version" />
+									<form:select path="versionMap" class="form-control" id="version" name="version">
+									  <c:forEach items="${versionMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.version}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-4">
 									<label>门襟</label>
-									<form:select path="placketMap" items="${placketMap}" class="form-control" id="placket" name="placket" />
+									<form:select path="placketMap" class="form-control" id="placket" name="placket">
+									  <c:forEach items="${placketMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.placket}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="col-xs-4">
 									<label>领撑</label>
-									<form:select path="collar_staysMap" items="${collar_staysMap}" class="form-control" id="collar" name="collar" />
+									<form:select path="collar_staysMap" class="form-control" id="collar" name="collar">
+									  <c:forEach items="${collar_staysMap}" var="s">
+									  <c:choose>
+							            <c:when test="${product != null && s.key == product.collarStays}">
+							                <option value="${s.key}" selected="true">${s.value}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${s.key}">${s.value}</option>
+							            </c:otherwise>
+							          </c:choose> 
+									  </c:forEach>
+									</form:select>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-xs-4">
 									<label>白领白袖</label>
 									<div class="form-control">
 									  <label class="radio-inline">
+									   <c:choose>
+									    <c:when test="${product == null || product.whiteCollarSleeve == 1}">
 									    <input type="radio" name="white_collar" value="1" id="white_collar1" autocomplete="off" checked> 是
+									    </c:when>
+									    <c:otherwise>
+									    <input type="radio" name="white_collar" value="1" id="white_collar1" autocomplete="off"> 是
+									    </c:otherwise>
+									   </c:choose>
 									  </label>
 									  <label class="radio-inline">
+									   <c:choose>
+									    <c:when test="${product != null && product.whiteCollarSleeve == 0}">
+									    <input type="radio" name="white_collar" value="0" id="white_collar0" autocomplete="off" checked> 否
+									    </c:when>
+									    <c:otherwise>
 									    <input type="radio" name="white_collar" value="0" id="white_collar0" autocomplete="off"> 否
+									    </c:otherwise>
+									   </c:choose>
 									  </label>
 									</div>
 								</div>
@@ -262,43 +410,60 @@ String productType = request.getParameter("item_type");
 									<label>口袋</label>
 									<div class="form-control">
 									  <label class="radio-inline">
+									   <c:choose>
+									    <c:when test="${product == null || product.pocket == '1'}">
 									    <input type="radio" name="pocket" value="1" id="pocket1" autocomplete="off" checked> 有
+									    </c:when>
+									    <c:otherwise>
+									    <input type="radio" name="pocket" value="1" id="pocket1" autocomplete="off"> 有
+									    </c:otherwise>
+									   </c:choose>
 									  </label>
 									  <label class="radio-inline">
+									   <c:choose>
+									    <c:when test="${product != null && product.pocket == '0'}">
+									    <input type="radio" name="pocket" value="0" id="pocket0" autocomplete="off" checked> 无
+									    </c:when>
+									    <c:otherwise>
 									    <input type="radio" name="pocket" value="0" id="pocket0" autocomplete="off"> 无
+									    </c:otherwise>
+									   </c:choose>
 									  </label>
 									</div>
 								</div>
 								<div class="col-xs-4">
 									<label>面料编号</label>
-									<input class="form-control" id="material" name="material" value=""></input>
+									<input class="form-control" id="material" name="material" value="${ product.material }"></input>
 								</div>
 								<div class="clearfix"></div>
-								<% } %>
+								</c:if>
 								<div class="col-xs-4">
 									<label>出厂价</label>
-									<input class="form-control" id="price_cost" name="price_cost" value="" required></input>
-								</div>
-								<div class="col-xs-4">
-									<label>代理价</label>
-									<input class="form-control" id="price_agent" name="price_agent" value="" required></input>
+									<input class="form-control" id="price_cost" name="price_cost" value="${ product.priceCost }" required></input>
 								</div>
 								<div class="col-xs-4">
 									<label>租赁价</label>
-									<input class="form-control" id="price_rent" name="price_rent" value="" required></input>
+									<input class="form-control" id="price_rent" name="price_rent" value="${ product.priceRent }" required></input>
+								</div>
+								<div class="col-xs-4">
+									<label>零售价</label>
+									<input class="form-control" id="price_sell" name="price_sell" value="${ product.priceSell }" required></input>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-xs-4">
-									<label>零售价</label>
-									<input class="form-control" id="price_sell" name="price_sell" value="" required></input>
+									<label>代理价</label>
+									<input class="form-control" id="price_agent" name="price_agent" value="${ product.priceAgent }" required></input>
 								</div>
 								<div class="col-xs-4">
 									<label>加盟商价</label>
-									<input class="form-control" id="price_alliance" name="price_alliance" value="" required></input>
+									<input class="form-control" id="price_alliance" name="price_alliance" value="${ product.priceAlliance }" required></input>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-xs-4">
-									<input type="hidden" id="user_no" name="user_no" value="${user_no}000"></input>
+									<input type="hidden" id="create_uid" name="create_uid" value="${ product.createUid }"></input>
+									<input type="hidden" id=user_no" name="user_no" value="${ product.updateUid }000"></input>
+									<input type="hidden" id="create_time" name="create_time" value="${ createDate }"></input>
+									<input type="hidden" id="prod_id" name="prod_id" value="${ product.id }"></input>
 									<button type="submit" class="btn btn-success">提交</button>
 								</div>
                     		</div>
@@ -339,14 +504,6 @@ String productType = request.getParameter("item_type");
 
         <script src="assets/scripts/app.js" type="text/javascript"></script>
         <script type="text/javascript" src="app/js/index.js"></script>
-        <script type="text/javascript">
-        $( document ).ready(function() {
-            console.log( "ready!" );
-            $("#product_info").validate();
-            $('select#type').val("<%=productType%>");
-            //$('select#type').attr("disabled", true);
-        });
-        </script>
 
         <!-- <script data-main="app/js/main" src="app/lib/requirejs/require.js"></script> -->
     </body>

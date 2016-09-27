@@ -27,7 +27,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         <link href="assets/css/pages/tasks.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color" />
         <link href="assets/css/custom.css" rel="stylesheet" type="text/css" />
+        <link href="assets/plugins/bootstrap-modal/css/simple-modal.css" rel="stylesheet" type="text/css" />
         <!-- END THEME STYLES -->
+        <style type="text/css">
+        .theme-popover-mask { z-index: 9998; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.4; filter:alpha(opacity=40); display:none }
+		.theme-popover { z-index:9999; position:fixed; top:50%; left:50%; width:660px; height:360px; margin:-180px 0 0 -330px; border-radius:5px; border:solid 2px #666; background-color:#fff; display:none; box-shadow: 0 0 10px #666; }
+        </style>
 	</head>
 	<!-- BEGIN BODY -->
     <body class="page-header-fixed">
@@ -159,17 +164,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                             <h3 class="page-title" id="index-page-title">产品信息录入</h3>
                             <ul class="page-breadcrumb breadcrumb">
                                 <li>
-                                    <i class="fa fa-home"></i>
-                                    <a href="javascript:;">
-                                        首页
-                                    </a>
-                                    <i class="fa fa-angle-right"></i>
+                                  <i class="fa fa-home"></i>
+                                    <a href="javascript;;">首页</a>
+                                  <i class="fa fa-angle-right"></i>
                                 </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        Dashboard
-                                    </a>
-                                </li>
+                                <li class="active">产品信息</li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -181,13 +180,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                     	<div class="row">
                     		<div class="col-xs-12">
                     		<c:choose>
-                    			<c:when test="${success == 0}">
+                    			<c:when test="${param['success'] == 0 || param['error'] != null}">
                     			<div class="alert alert-danger alert-dismissible" role="alert">
                     				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     				<strong>Error:</strong>${error}
                     			</div>
                     			</c:when>
-                    			<c:when test="${success == 1}">
+                    			<c:when test="${param['success'] == 1}">
                     			<div class="alert alert-success alert-dismissible" role="alert">
                     				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     				<strong>Sucess!</strong>
@@ -196,24 +195,117 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                     		</c:choose>
                     		</div>
                     	</div>
-                    	<form action="/amor/rest/product/record" method="POST" role="form">
-                    		<div class="row">
-                    			<div class="col-xs-6">
-									<label><i>*</i>产品类型</label>
-									<form:select path="typeMap" items="${typeMap}" class="form-control" id="item_type" name="item_type" />
+                    	<div class="row">
+                    	  <div class="col-xs-12">
+                    		<form action="/amor/rest/product/record" method="post" class="form-horizontal">
+                    			<div class="form-group">
+									<label for="item_type" class="col-sm-2 control-label">产品类型</label>
+									<div  class="col-sm-8">
+										<form:select path="typeMap" items="${typeMap}" class="form-control" id="item_type" name="item_type" />
+									</div>
+									<div  class="col-sm-2">
+										<button type="submit" class="btn btn-success">
+										  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+										</button>
+									</div>
 								</div>
-								<div class="col-xs-6">
-									<label><i>*</i>货号</label>
-									<input class="form-control" id="item_no" name="item_no" value=""></input>
-								</div>
-								<div class="clearfix"></div>
-								<div class="col-xs-12">
-									<button type="submit" class="btn btn-success">新增</button>
-								</div>
-                    		</div>
-                    	</form>
+                    		</form>
+                    	  </div>
+                    	</div>
+					    <div class="row">
+					      <div class="col-xs-12">
+					        <div class="panel panel-default">
+					          <div class="panel-heading">产品列表</div>
+					          <c:if test="${page!=null}">
+					          <table class="table table-striped" style="width:100%;">
+					                <thead>
+					                  <tr>
+					                    <th>ID</th>
+					                    <th>货号</th>
+					                    <th>商品类型</th>
+					                    <th>操作</th>
+					                  </tr>
+					                </thead>
+					                <tbody>
+					                <c:forEach items="${page.list}" var="product">
+					                    <tr>
+					                        <td>${product.id}</td>
+					                        <td>${product.itemCode}</td>
+					                        <td>${typeMap[product.itemType]}</td>
+					                        <td>
+					                          <a href="${pageContext.request.contextPath}/rest/product/edit?id=${product.id}" role="button" class="btn btn-primary btn-sm">
+											    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改
+											  </a>
+											  <a rel="rs-dialog" data-target="myModal" role="button" class="btn btn-danger btn-sm" target="${product.id}">
+											    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> 删除
+											  </a>
+					                        </td>
+					                    </tr>
+					                </c:forEach>
+					                </tbody>
+					            </table>
+					          </c:if>
+					        </div>
+					      </div>
+                    	</div>
+                    	<div class="row">
+                    	  <c:if test="${page!=null}">
+                    	  <div class="col-xs-12 text-center">
+                    	    <nav aria-label="Page navigation">
+							  <ul class="pagination">
+							   <c:choose>
+							    <c:when test="${page.hasPreviousPage}">
+							    <li>
+							      <a href="${pageContext.request.contextPath}/rest/product/?pageNum=${page.prePage}&pageSize=${page.pageSize}" aria-label="Previous">
+							        <span aria-hidden="true">&laquo;</span>
+							      </a>
+							    </li>
+							    </c:when>
+							    <c:otherwise>
+							    <li class="disabled">
+							      <a href="#" aria-label="Previous">
+							        <span aria-hidden="true">&laquo;</span>
+							      </a>
+							    </li>
+							    </c:otherwise>
+							   </c:choose>
+							   <c:forEach items="${page.navigatepageNums}" var="nav">
+		                        <c:if test="${nav == page.pageNum}">
+		                        <li class="active">
+		                          <a href="#">${nav}
+		                            <span class="sr-only">(current)</span>
+		                          </a>
+		                        </li>
+		                        </c:if>
+		                        <c:if test="${nav != page.pageNum}">
+		                          <li>
+		                            <a href="${pageContext.request.contextPath}/rest/product/?pageNum=${nav}&pageSize=${page.pageSize}">${nav}
+		                            </a>
+		                          </li>
+		                        </c:if>
+			                   </c:forEach>
+			                   <c:choose>
+							    <c:when test="${page.hasNextPage}">
+							    <li>
+							      <a href="${pageContext.request.contextPath}/rest/product/?pageNum=${page.nextPage}&pageSize=${page.pageSize}" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							    </li>
+							    </c:when>
+							    <c:otherwise>
+							    <li class="disabled">
+							      <a href="#" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							    </li>
+							    </c:otherwise>
+							   </c:choose>
+							  </ul>
+							</nav>
+						  </div>
+						  </c:if>
+                    	</div>
                     </div>
-
                     <!-- END PORTLET-->
                 </div>
             </div>
@@ -229,6 +321,24 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                 <span class="go-top"><i class="fa fa-angle-up"></i></span>
             </div>
         </div>
+        <div class="rs-dialog" id="myModal"> 
+        <form method="post" action="/amor/rest/product/delete">
+          <div class="rs-dialog-box"> 
+            <a class="close" href="#">&times;</a> 
+            <div class="rs-dialog-header"> 
+              <h3>删除</h3> 
+            </div> 
+            <div class="rs-dialog-body"> 
+              <p>请确认是否要删除该条记录</p> 
+              <input type="hidden" value="" name="prod_id" id="prod_id" />
+            </div> 
+            <div class="rs-dialog-footer">
+              <input type="button" class="btn btn-default rs-close" value="关闭" />
+              <button type="submit" class="btn btn-danger">删除</button>
+            </div>
+          </div>
+        </form>
+        </div>
         <!--[if lt IE 9]>
         <script src="assets/plugins/respond.min.js"></script>
         <script src="assets/plugins/excanvas.min.js"></script>
@@ -242,13 +352,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         <script src="assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
         <script src="assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-
+		<script src="assets/plugins/bootstrap-modal/js/simple-modal.js" type="text/javascript"></script>
         <script src="assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
         <script type="text/javascript" src="assets/plugins/select2/select2.min.js"></script>
 
         <script src="assets/scripts/app.js" type="text/javascript"></script>
-        <script type="text/javascript" src="app/js/index.js"></script>
-
-        <!-- <script data-main="app/js/main" src="app/lib/requirejs/require.js"></script> -->
+        <!-- <script type="text/javascript" src="app/js/index.js"></script>
+        <script data-main="app/js/main" src="app/lib/requirejs/require.js"></script> -->
     </body>
 </html>
