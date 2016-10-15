@@ -1,0 +1,11 @@
+<<<<<<< HEAD
+.settings
+.project
+.classpath
+target
+=======
+.settings
+.project
+.classpath
+target
+>>>>>>> ignore
