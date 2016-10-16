@@ -9,6 +9,8 @@ public class Constants {
 	
 	public static final String VALIDATE_CODE = "_VALIDATE_CODE";
 	
+	public static final String USER_ID = "_USER_ID";
+	
 	public static final String USER_INFO = "_USER_INFO";
 	
 }

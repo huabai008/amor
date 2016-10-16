@@ -1,34 +1,31 @@
 package com.amor.service.impl;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.stereotype.Service;
 
 import com.amor.core.base.BaseMapper;
 import com.amor.core.base.BaseServiceImpl;
-import com.amor.core.util.PasswordService;
-import com.amor.orm.mapper.APermissionMapper;
-import com.amor.orm.mapper.ARoleMapper;
-import com.amor.orm.mapper.ARoleWebPermissionMapper;
 import com.amor.orm.mapper.AUserMapper;
 import com.amor.orm.mapper.AUserRoleMapper;
-import com.amor.orm.mapper.AWebInfoMapper;
-import com.amor.orm.model.APermission;
-import com.amor.orm.model.ARole;
+import com.amor.orm.model.ARolePermission;
 import com.amor.orm.model.AUser;
+import com.amor.orm.model.AUserRole;
 import com.amor.service.UserService;
 
 @Service
-public class UserServiceImpl extends BaseServiceImpl<AUser, Integer> implements UserService{
+public class UserServiceImpl extends BaseServiceImpl<AUser, Integer> implements UserService {
 
 	@Resource
 	private AUserMapper userMapper;
-	
+
+	@Resource
+	private AUserRoleMapper userRoleMapper;
+
 	@Override
 	public int insert(AUser model) {
 		return userMapper.insert(model);
@@ -53,15 +50,27 @@ public class UserServiceImpl extends BaseServiceImpl<AUser, Integer> implements 
 	public BaseMapper<AUser, Integer> getMapper() {
 		return userMapper;
 	}
-	
-	@Override
-	public AUser authentication(AUser user){
-		AUser user_0 = selectByName(user.getUsername());
-		return null;
-	}
 
 	@Override
 	public AUser selectByName(String username) {
 		return userMapper.selectByName(username);
+	}
+
+	@Override
+	public void selectUserRole(AUser user) {
+		List<AUserRole> roleList = userRoleMapper.selectByUserId(user.getId());
+		for (AUserRole role : roleList) {
+			user.addRole(role.getRoleId());
+		}
+	}
+
+	@Override
+	public Set<Integer> selectRoleIdByUserId(Integer user_id) {
+		Set<Integer> result = new HashSet<>();
+		List<AUserRole> roleList = userRoleMapper.selectByUserId(user_id);
+		for (AUserRole role : roleList) {
+			result.add(role.getRoleId());
+		}
+		return result;
 	}
 }
