@@ -20,6 +20,13 @@
 	<!-- @Controller 注解扫描 -->
 	<mvc:annotation-driven></mvc:annotation-driven>
 	
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
+	</mvc:interceptors>
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="zh_Cn"></property>
+	</bean>
+	
 	<!-- 避免IE浏览器执行AJAX时返回Jaon时下载文件 -->
 	<bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 		<property name="supportedMediaTypes">
