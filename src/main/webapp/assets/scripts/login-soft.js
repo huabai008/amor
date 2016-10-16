@@ -27,19 +27,12 @@ var Login = function() {
             },
 
             invalidHandler : function(event, validator) { // display error
-                // alert on form
-                // submit
+                // alert on form submit
                 $('.alert-danger', $('.login-form')).show();
             },
 
             highlight : function(element) { // hightlight error inputs
-                $(element).closest('.form-group').addClass('has-error'); // set
-                // error
-                // class
-                // to
-                // the
-                // control
-                // group
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
             },
 
             success : function(label) {
@@ -52,8 +45,10 @@ var Login = function() {
             },
 
             submitHandler : function(form) {
+                /**
                 var passwordInput = $('[name="password"]');
                 passwordInput.val(sha256_digest(passwordInput.val()));
+                */
                 form.submit();
             }
         });
@@ -87,20 +82,12 @@ var Login = function() {
                 }
             },
 
-            invalidHandler : function(event, validator) { // display error
-                // alert on form
-                // submit
-
+            invalidHandler : function(event, validator) { // display error alert on form submit
+            	
             },
 
             highlight : function(element) { // hightlight error inputs
-                $(element).closest('.form-group').addClass('has-error'); // set
-                // error
-                // class
-                // to
-                // the
-                // control
-                // group
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
             },
 
             success : function(label) {
@@ -161,14 +148,7 @@ var Login = function() {
                         });
 
         $('#select2_sample4').change(function() {
-            $('.register-form').validate().element($(this)); // revalidate
-            // the chosen
-            // dropdown
-            // value and
-            // show error or
-            // success
-            // message for
-            // the input
+            $('.register-form').validate().element($(this)); // revalidate the chosen dropdown value and show error or success message for the input
         });
 
         $('.register-form').validate({
