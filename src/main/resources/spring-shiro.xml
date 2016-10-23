@@ -19,6 +19,8 @@
 				/app/**=anon
 				/assets/** = anon
 				/rest/product/** = anon
+				/rest/multipleUpload = anon
+				/rest/multipleSave = anon
 				/rest/**/login=anon
 				<!-- protected -->
 				/rest/auth/**=authc

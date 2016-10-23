@@ -1,17 +1,27 @@
 package com.amor.web.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.amor.orm.model.AProduct;
 import com.amor.service.ProductInfoService;
@@ -111,15 +121,49 @@ public class ProductInfoController {
 	}
 	
 	@RequestMapping(value="/new", method=RequestMethod.POST)
-	public String submit(@Valid AProduct product, HttpServletRequest request, Model model) {
+	public String submit(@Valid AProduct product, HttpServletRequest request, Model model,
+			@RequestParam("file") MultipartFile[] files) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
 		model.addAttribute("page", retrivePage(1, 10));
+		
+		String fileName = null;
+		Properties props = null;
 		try {
 			prepareData(product, request);
 			productInfoSerivce.insertProductInfo(product);
 			model.addAttribute("success", 1);
 			
+			props = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/config.properties"));
+			String uploadDir = props.getProperty("upload.dir");
+			Map<String, String> warningMsg = new HashMap<>();
+			if (files != null && files.length >0) {
+	    		for (int i = 0; i < files.length; i++) {
+		            try {
+		                fileName = files[i].getOriginalFilename();
+		                int dotIndex = fileName.lastIndexOf('.');
+		                if (dotIndex > 0 || files[i].getSize() > 0) {
+		                	fileName = fileName.substring(dotIndex);
+		                } else {
+		                	model.addAttribute("warning", 1);
+		                	warningMsg.put(fileName, "file name is invalid or file is empty");
+		                	continue;
+		                }
+		            	fileName = uploadDir + "/product_img_" + 
+		            				Calendar.getInstance().getTimeInMillis() + fileName;
+		                byte[] bytes = files[i].getBytes();
+		                BufferedOutputStream buffStream = 
+		                        new BufferedOutputStream(new FileOutputStream(new File(fileName)));
+		                buffStream.write(bytes);
+		                buffStream.close();
+		            } catch (Exception e) {
+		            	model.addAttribute("warning", 1);
+		            	warningMsg.put(files[i].getOriginalFilename(), "Failed to upload: " + e.getMessage());
+		            }
+	    		}
+	        }
+
+            model.addAttribute("FileUploadError", warningMsg);
 			return "redirect:/rest/product/";
 		} catch (Exception err) {
 			model.addAttribute("success", 0);
