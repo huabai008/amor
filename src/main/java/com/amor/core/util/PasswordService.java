@@ -4,7 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * 密碼加密服务，采用PBE算法，生成64位密码
+ * 密碼加密服务，采用PBE算法，生成64/70位密码
  * 
  * @author huaba
  *

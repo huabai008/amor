@@ -2,8 +2,14 @@ package com.amor.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.amor.core.util.Constants;
 
 /**
  * 公共控制器
@@ -17,7 +23,10 @@ public class CommonController {
 	 * 首页
 	 */
 	@RequestMapping("/index")
-	public String index(HttpServletRequest request){
+	@RequiresRoles("2")
+	public String index(HttpServletRequest request, Model model){
+		Subject subject = SecurityUtils.getSubject();
+		model.addAttribute("userid", subject.getSession().getAttribute(Constants.USER_ID));
 		return "index";
 	}
 	

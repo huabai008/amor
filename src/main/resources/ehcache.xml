@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache name="txswx-ehcache" updateCheck="false">
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+	updateCheck="false">
+	
+	<diskStore path="java.io.tmpdir"/>
+	
+	<!-- 
+		eternal Element是否永久有效，为true时timeout失效
+		maxElementsInMemory 内存中最大缓存对象数
+		maxElementsOnDisk 硬盘中最大缓存对象数
+		overflowToDisk memory中缓存对象数满了之后是否写入硬盘
+		diskPersistent 是否缓存虚拟机重启数据
+		timeToIdleSeconds Element失效前允许闲置时间 0为无穷大
+		timeToLiveSeconds Element失效前允许存活时间 0为无穷大
+		memoryStoreEvictionPolicy 缓存回收策略 FIFO先进先出 LRU最近最少使用 LFU最少使用
+		diskExpiryThreadIntervalSeconds 硬盘对象监测线程运行时间间隔
+		diskSpoolBufferSizeMB 硬盘缓存区大小
+	 -->
 	<defaultCache
+		eternal="false"
 		maxElementsInMemory="10000"
-		eternal="true"
+		overflowToDisk="false"
+		diskPersistent="false"
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LRU">
+	</defaultCache>
+		
+	<cache name="passwordRetryCache"
+		eternal="false"
+		maxElementsInMemory="10000"
+		overflowToDisk="false"
+		diskPersistent="false"
 		timeToIdleSeconds="300"
 		timeToLiveSeconds="600"
-		overflowToDisk="true"
-		diskPersistent="true"
-		maxEntriesLocalDisk="100000"
-		/>
+		memoryStoreEvictionPolicy="LRU">
+	</cache>
+		
+	<cache name="authorizationCache"
+		eternal="false"
+		maxElementsInMemory="10000"
+		overflowToDisk="false"
+		diskPersistent="false"
+		timeToIdleSeconds="300"
+		timeToLiveSeconds="0"
+		statistics="true">
+	</cache>
+		
+	<cache name="activeSessionCache"  
+		eternal="false"  
+		maxEntriesLocalHeap="10000"  
+		overflowToDisk="false"  
+		diskPersistent="false"  
+		timeToLiveSeconds="0"  
+		timeToIdleSeconds="0"  
+		statistics="true">
+	</cache>
 </ehcache>

@@ -10,7 +10,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.taglibs.standard.extra.spath.SPathFilter;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PasswordServiceImpl implements PasswordService{
 
 	private final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
@@ -19,7 +21,7 @@ public class PasswordServiceImpl implements PasswordService{
 	
 	private final int SALT_BYTE_SIZE = 16;
 	private final int HASH_BYTE_SIZE = 16;
-	private final int PBKDF2_ITERATIONS = 10;
+	private final int PBKDF2_ITERATIONS = 1000;
 	
 	private final int ITERATION_INDEX = 0;
 	private final int SALT_INDEX = 1;
@@ -86,7 +88,7 @@ public class PasswordServiceImpl implements PasswordService{
 	 * @throws InvalidKeySpecException 
 	 */
 	private byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes) throws NoSuchAlgorithmException, InvalidKeySpecException{
-		PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, bytes);
+		PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterations, bytes*8);
 		SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
 		return keyFactory.generateSecret(keySpec).getEncoded();
 	}
@@ -126,5 +128,10 @@ public class PasswordServiceImpl implements PasswordService{
 			array[i] = (byte) Integer.parseInt(hex.substring(2*i, 2*i+2), 16);
 		}
 		return array;
+	}
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException{
+		PasswordService s = new PasswordServiceImpl();
+		System.out.println(s.createHash("zhangyue"));
 	}
 }
