@@ -64,17 +64,78 @@
 						<input type="checkbox" name="remember" checked="checked" value="true" />
 						下次自动登录
 					</label>
-					<button type="submit" class="btn blue pull-right">登录<i class="m-icon-swapright m-icon-white"></i></button>
-				</div>
-				<div class="forget-password">
-					<h4>忘记密码 ?</h4>
-					<p>点击 <a href="javascript:;" id="forget-password">这里</a> 重置您的密码.
-					</p>
+					<button type="submit" class="btn blue pull-right">
+						登录<i class="m-icon-swapright m-icon-white"></i>
+					</button>
 				</div>
 				<div class="create-account">
 					<p>
-						 还没有账号 ?&nbsp; <a href="javascript:;" id="register-btn">创建一个账号</a>
+						 <a href="javascript:;" id="register-btn">注册账号</a>
 					</p>
+				</div>
+				<div class="forget-password">
+					<p>
+						<a href="javascript:;" id="forget-password">忘记密码</a>
+					</p>
+				</div>
+			</form>
+			
+			<form class="forget-form" action="index.html" method="post">
+				<h3>忘记密码 ?</h3>
+				<p>
+					 请输入您的电子邮箱地址来重置您的密码.
+				</p>
+				<div class="form-group">
+					<div class="input-icon">
+						<i class="fa fa-envelope"></i>
+						<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"/>
+					</div>
+				</div>
+				<div class="form-actions">
+					<button type="button" id="back-btn" class="btn">
+						<i class="m-icon-swapleft"></i> 返回登录 </button>
+					<button type="submit" class="btn blue pull-right">
+						提交 <i class="m-icon-swapright m-icon-white"></i>
+					</button>
+				</div>
+			</form>
+			
+			<form class="register-form" action="/amor/rest/user/register" method="post">
+				<h3 class="form-title">注册</h3>
+				<div class="form-group">
+					<label class="control-label visible-ie8 visible-ie9">用户名</label>
+					<div class="input-icon">
+						<i class="fa fa-user"></i>
+						<input id="username" name="username" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label visible-ie8 visible-ie9">密码</label>
+					<div class="input-icon">
+						<i class="fa fa-lock"></i>
+						<input id="register_password" name="password" type="password" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="密码"/> 
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label visible-ie8 visible-ie9">再次输入密码</label>
+					<div class="input-icon">
+						<i class="fa fa-lock"></i>
+						<input id="repassword" name="repassword" type="password" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="再次输入密码"/> 
+					</div>
+				</div>
+				<div class="form-group">
+					<label>
+						<input type="checkbox" id="agreement" name="agreement"/> 我同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
+					</label>
+					<div id="register_agreement_error"></div>
+				</div>
+				<div class="form-actions">
+					<button type="button" id="register-back-btn" class="btn">
+						<i class="m-icon-swapleft"></i> 返回登录 
+					</button>
+					<button type="submit" class="btn blue pull-right">
+						注册 <i class="m-icon-swapright m-icon-white"></i>
+					</button>
 				</div>
 			</form>
 		</div>

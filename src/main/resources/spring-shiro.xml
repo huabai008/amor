@@ -31,6 +31,8 @@
 				/app/**=anon
 				/assets/** = anon
 				/rest/**/login=anon
+				/rest/**/register=anon
+				/rest/**/forgetPWD=anon
 				/rest/**/logout = logout
 				<!-- protected -->
 				/rest/auth/**=authc
