@@ -3,9 +3,9 @@ package com.amor.web.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amor.orm.model.AProduct;
+import com.amor.orm.model.AProductImage;
 import com.amor.service.ProductInfoService;
 import com.github.pagehelper.PageInfo;
 
@@ -74,6 +75,7 @@ public class ProductInfoController {
 				model.addAttribute(dict + "Map", map);
 			}
 			model.addAttribute("item_type", Integer.parseInt(request.getParameter("item_type")));
+			
 			return "record";
 		} catch (Error e) {
 			model.addAttribute("error", e);
@@ -98,6 +100,10 @@ public class ProductInfoController {
 				model.addAttribute("edit", 1);
 				AProduct product = productInfoSerivce.selectProductByID(Integer.parseInt(productID));
 				model.addAttribute("product", product);
+				// get product images
+				List<AProductImage> prod_imgs = productInfoSerivce.selectProductImageByID(Integer.parseInt(productID));
+				model.addAttribute("prod_imgs", prod_imgs);
+				
 				Integer type = product.getItemType();
 				if (product.getTrends() != null && (type == 0 || type == 1)) {
 					Integer[] prod_trds = new Integer[trendsMap.size()];
@@ -121,48 +127,25 @@ public class ProductInfoController {
 	}
 	
 	@RequestMapping(value="/new", method=RequestMethod.POST)
-	public String submit(@Valid AProduct product, HttpServletRequest request, Model model,
+	public String submit(@Valid AProduct product, @Valid AProductImage prodImg, 
+			HttpServletRequest request, Model model,
 			@RequestParam("file") MultipartFile[] files) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
-		model.addAttribute("page", retrivePage(1, 10));
+		model.addAttribute("page", retrievePage(1, 10));
 		
-		String fileName = null;
-		Properties props = null;
 		try {
 			prepareData(product, request);
-			productInfoSerivce.insertProductInfo(product);
-			model.addAttribute("success", 1);
+			int prodId = productInfoSerivce.insertProductInfo(product);
 			
-			props = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/config.properties"));
-			String uploadDir = props.getProperty("upload.dir");
-			Map<String, String> warningMsg = new HashMap<>();
-			if (files != null && files.length >0) {
-	    		for (int i = 0; i < files.length; i++) {
-		            try {
-		                fileName = files[i].getOriginalFilename();
-		                int dotIndex = fileName.lastIndexOf('.');
-		                if (dotIndex > 0 || files[i].getSize() > 0) {
-		                	fileName = fileName.substring(dotIndex);
-		                } else {
-		                	model.addAttribute("warning", 1);
-		                	warningMsg.put(fileName, "file name is invalid or file is empty");
-		                	continue;
-		                }
-		            	fileName = uploadDir + "/product_img_" + 
-		            				Calendar.getInstance().getTimeInMillis() + fileName;
-		                byte[] bytes = files[i].getBytes();
-		                BufferedOutputStream buffStream = 
-		                        new BufferedOutputStream(new FileOutputStream(new File(fileName)));
-		                buffStream.write(bytes);
-		                buffStream.close();
-		            } catch (Exception e) {
-		            	model.addAttribute("warning", 1);
-		            	warningMsg.put(files[i].getOriginalFilename(), "Failed to upload: " + e.getMessage());
-		            }
-	    		}
-	        }
+			prodImg.setProductId(prodId);
+			String warningMsg = uploadFiles(prodImg, files);
+			if (warningMsg.length() > 0) {
+				model.addAttribute("warning", 1);
+				model.addAttribute("FileUploadError", warningMsg);
+			}
 
+			model.addAttribute("success", 1);
             model.addAttribute("FileUploadError", warningMsg);
 			return "redirect:/rest/product/";
 		} catch (Exception err) {
@@ -173,15 +156,35 @@ public class ProductInfoController {
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String update(@Valid AProduct product, HttpServletRequest request, Model model) {
+	public String update(@Valid AProduct product, @Valid AProductImage prodImg,
+			HttpServletRequest request, Model model,
+			@RequestParam("file") MultipartFile[] files) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
-		model.addAttribute("page", retrivePage(1, 10));
+		model.addAttribute("page", retrievePage(1, 10));
 		try {
 			prepareData(product, request);
 			productInfoSerivce.updateProductInfo(product);
-			model.addAttribute("success", 1);
 			
+			prodImg.setProductId(product.getId());
+			String warningMsg = uploadFiles(prodImg, files);
+			
+			String[] deleteImageIds = request.getParameterValues("del");
+			if (deleteImageIds != null && deleteImageIds.length > 0) {
+				for (String imageId : deleteImageIds) {
+					try {
+						productInfoSerivce.deleteProductImage(Integer.parseInt(imageId));
+					} catch (NumberFormatException e) {
+						warningMsg += e.getMessage();
+					}
+				}
+			}
+			if (warningMsg.length() > 0) {
+				model.addAttribute("warning", 1);
+				model.addAttribute("FileUploadError", warningMsg);
+			}
+			
+			model.addAttribute("success", 1);
 			return "redirect:/rest/product/";
 		} catch (Exception err) {
 			model.addAttribute("success", 0);
@@ -194,13 +197,15 @@ public class ProductInfoController {
 	public String delete(HttpServletRequest request, Model model) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
-		model.addAttribute("page", retrivePage(1, 10));
+		model.addAttribute("page", retrievePage(1, 10));
 		
 		try {
 			String id = request.getParameter("prod_id");
 			if (id != null && id.length() > 0) {
 				int flag = productInfoSerivce.deleteProductInfo(Integer.parseInt(id));
-				if (flag > 0) {
+				int del = productInfoSerivce.deleteProductImages(Integer.parseInt(id));
+				// TODO: delete image files on disk
+				if (flag * del > 0) {
 					model.addAttribute("success", 1);
 				}
 			}
@@ -212,6 +217,11 @@ public class ProductInfoController {
 		}
 	}
 	
+	/**
+	 * Reading data from HttpServletRequest object of product information form.
+	 * @param product
+	 * @param request
+	 */
 	private void prepareData(AProduct product, HttpServletRequest request) {
 		String id = request.getParameter("prod_id");
 		if (id != null && id.length() > 0) {
@@ -275,7 +285,60 @@ public class ProductInfoController {
 		// return product;
 	}
 
-	private PageInfo<AProduct> retrivePage(int pageNum, int pageSize) {
+	/**
+	 * Upload images of product.
+	 * @param prodImg
+	 * @param files
+	 * @return Waring messages of that image uploading may be unsuccessful.
+	 * @throws IOException
+	 */
+	private String uploadFiles(AProductImage prodImg, MultipartFile[] files) throws IOException{
+		String fileName = null;
+		Properties props = null;
+		prodImg.setCreateDatetime(new Date());
+		props = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/config.properties"));
+		String uploadDir = props.getProperty("upload.dir");
+		String baseURL = props.getProperty("upload.relative.baseurl");
+		String warningMsg = "";
+		if (files != null && files.length >0) {
+    		for (int i = 0; i < files.length; i++) {
+	            try {
+	                fileName = files[i].getOriginalFilename();
+	                int dotIndex = fileName.lastIndexOf('.');
+	                if (dotIndex > 0 || files[i].getSize() > 0) {
+	                	fileName = fileName.substring(dotIndex);
+	                } else {
+	                	warningMsg += files[i].getOriginalFilename() + ":" + "file name is invalid or file is empty. |";
+	                	continue;
+	                }
+	            	fileName = "/product_img_" + Calendar.getInstance().getTimeInMillis() + fileName;
+	            	String fileURL = baseURL + fileName;
+	            	fileName = uploadDir + fileName;
+	                byte[] bytes = files[i].getBytes();
+	                BufferedOutputStream buffStream = 
+	                        new BufferedOutputStream(new FileOutputStream(new File(fileName)));
+	                buffStream.write(bytes);
+	                buffStream.close();
+	                // TODO: prodImg.setPriority(getParameter);
+	                // TODO: prodImg.setImgSrc(fileURL);
+	                // TODO: prodImg.setImgPath(filePath);
+	                prodImg.setImgPath(fileURL);
+	                productInfoSerivce.insertProductImage(prodImg);
+	            } catch (Exception e) {
+	            	warningMsg += files[i].getOriginalFilename() + ":" + e.getMessage() + "|";
+	            }
+    		}
+        }
+		return warningMsg;
+	}
+	
+	/**
+	 * Get the records according to page number and size.
+	 * @param pageNum
+	 * @param pageSize
+	 * @return records of product information
+	 */
+	private PageInfo<AProduct> retrievePage(int pageNum, int pageSize) {
 		List<AProduct> prod_list = productInfoSerivce.queryProductByPage(pageNum, pageSize);
 		return new PageInfo<AProduct>(prod_list);
 	}

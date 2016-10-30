@@ -159,7 +159,7 @@
 								role="form" id="product_info">
 						</c:otherwise>
 					</c:choose>
-					<div class="row">
+					<div class="row bottom-buffer">
 						<div class="col-xs-6">
 							<label><i>*</i>产品类型</label>
 							<form:select path="typeMap" class="form-control" id="type"
@@ -449,6 +449,27 @@
 								value="${ product.priceAlliance }" required></input>
 						</div>
 						<div class="clearfix"></div>
+					</div>
+					<div class="row bottom-buffer">
+					  <c:forEach items="${prod_imgs}" var="img">
+						<div class="col-xs-12 col-lg-3">
+							<div class="fileupload fileupload-exists" data-provides="fileupload" data-picid="${img.id}">
+								<div class="fileupload-preview thumbnail"
+									data-trigger="fileupload" style="width: 200px; height: 150px;">
+									<img src="${img.imgPath}" height="150px" />
+								</div>
+								<div>
+									<span class="btn btn-default btn-file"><span
+										class="fileupload-new">Select image</span><span
+										class="fileupload-exists">Change</span><input type="file"
+										name="file"></span> <a href="#"
+										class="btn btn-default fileupload-exists"
+										data-dismiss="fileupload">Remove</a>
+								</div>
+								<input type="hidden" name="del" value="" />
+							</div>
+						</div>
+					  </c:forEach>
 						<div class="col-xs-12 col-lg-3">
 							<div class="fileupload fileupload-new" data-provides="fileupload">
 								<div class="fileupload-preview thumbnail"
@@ -464,48 +485,10 @@
 							</div>
 						</div>
 						<div class="col-xs-12 col-lg-3">
-							<div class="fileupload fileupload-new" data-provides="fileupload">
-								<div class="fileupload-preview thumbnail"
-									data-trigger="fileupload" style="width: 200px; height: 150px;"></div>
-								<div>
-									<span class="btn btn-default btn-file"><span
-										class="fileupload-new">Select image</span><span
-										class="fileupload-exists">Change</span><input type="file"
-										name="file"></span> <a href="#"
-										class="btn btn-default fileupload-exists"
-										data-dismiss="fileupload">Remove</a>
-								</div>
-							</div>
+							<button type="button" class="btn btn-lg btn-primary" id="btn-add-image">添加图片</button>
 						</div>
-						<div class="col-xs-12 col-lg-3">
-							<div class="fileupload fileupload-new" data-provides="fileupload">
-								<div class="fileupload-preview thumbnail"
-									data-trigger="fileupload" style="width: 200px; height: 150px;"></div>
-								<div>
-									<span class="btn btn-default btn-file"><span
-										class="fileupload-new">Select image</span><span
-										class="fileupload-exists">Change</span><input type="file"
-										name="file"></span> <a href="#"
-										class="btn btn-default fileupload-exists"
-										data-dismiss="fileupload">Remove</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-12 col-lg-3">
-							<div class="fileupload fileupload-new" data-provides="fileupload">
-								<div class="fileupload-preview thumbnail"
-									data-trigger="fileupload" style="width: 200px; height: 150px;"></div>
-								<div>
-									<span class="btn btn-default btn-file"><span
-										class="fileupload-new">Select image</span><span
-										class="fileupload-exists">Change</span><input type="file"
-										name="file"></span> <a href="#"
-										class="btn btn-default fileupload-exists"
-										data-dismiss="fileupload">Remove</a>
-								</div>
-							</div>
-						</div>
-						<div class="clearfix"></div>
+					</div>
+					<div class="row bottom-buffer">
 						<div class="col-xs-4">
 							<input type="hidden" id="create_uid" name="create_uid"
 								value="${ product.createUid }"></input> <input type="hidden"
@@ -514,6 +497,7 @@
 								value="${ createDate }"></input> <input type="hidden"
 								id="prod_id" name="prod_id" value="${ product.id }"></input>
 							<button type="submit" class="btn btn-success">提交</button>
+							<a href="javascript:history.back()" class="btn btn-danger">取消</a>
 						</div>
 					</div>
 					</form>
@@ -536,8 +520,7 @@
         <script src="assets/plugins/respond.min.js"></script>
         <script src="assets/plugins/excanvas.min.js"></script>
         <![endif]-->
-	<script src="assets/plugins/jquery-1.10.2.min.js"
-		type="text/javascript"></script>
+    <script src="assets/plugins/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
 	<script src="assets/plugins/jquery-migrate-1.2.1.min.js"
 		type="text/javascript"></script>
 	<script src="assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js"
@@ -564,7 +547,7 @@
 		src="assets/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
 
 	<script src="assets/scripts/app.js" type="text/javascript"></script>
-	<script type="text/javascript" src="app/js/index.js"></script>
+	<script type="text/javascript" src="app/js/record-page-custom.js"></script>
 
 	<!-- <script data-main="app/js/main" src="app/lib/requirejs/require.js"></script> -->
 	<r:require modules="bootstrap-file-upload" />

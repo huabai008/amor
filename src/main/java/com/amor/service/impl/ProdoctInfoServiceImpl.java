@@ -9,9 +9,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.amor.orm.mapper.ABusinessDictMapper;
+import com.amor.orm.mapper.AProductImageMapper;
 import com.amor.orm.mapper.AProductMapper;
 import com.amor.orm.model.ABusinessDict;
 import com.amor.orm.model.AProduct;
+import com.amor.orm.model.AProductImage;
 import com.amor.service.ProductInfoService;
 import com.github.pagehelper.PageHelper;
 
@@ -24,9 +26,17 @@ public class ProdoctInfoServiceImpl implements ProductInfoService {
 	@Resource
 	private ABusinessDictMapper dictMapper;
 	
+	@Resource
+	private AProductImageMapper prodImgMapper;
+	
 	@Override
 	public int insertProductInfo(AProduct product) {
-		return productMapper.insert(product);
+		int success = productMapper.insert(product);
+		if (success > 0) {
+			return product.getId();
+		} else {
+			return -1;
+		}
 	}
 
 	@Override
@@ -57,5 +67,25 @@ public class ProdoctInfoServiceImpl implements ProductInfoService {
 	@Override
 	public int deleteProductInfo(Integer id) {
 		return productMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int insertProductImage(AProductImage prodImg) {
+		return prodImgMapper.insert(prodImg);
+	}
+
+	@Override
+	public List<AProductImage> selectProductImageByID(Integer productId) {
+		return prodImgMapper.selectByProductId(productId);
+	}
+
+	@Override
+	public int deleteProductImage(Integer id) {
+		return prodImgMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int deleteProductImages(Integer productId) {
+		return prodImgMapper.deleteByProductId(productId);
 	}
 }

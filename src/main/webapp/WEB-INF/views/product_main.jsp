@@ -197,9 +197,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                    			<div class="alert alert-warning alert-dismissible" role="alert">
                    				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                    				<strong>File Upload Warning!</strong>
-                   				<c:forEach items="${FileUploadError}" var="warn">
-                   				<strong>${warn.key}:</strong>${warn.value}<br />
-                   				</c:forEach>
+                   				${FileUploadError}
                    			</div>
                    			</c:if>
                     		</div>
@@ -214,7 +212,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 									</div>
 									<div  class="col-sm-2">
 										<button type="submit" class="btn btn-success">
-										  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+										  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+										  &nbsp;&nbsp;新增
 										</button>
 									</div>
 								</div>
@@ -243,10 +242,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					                        <td>${typeMap[product.itemType]}</td>
 					                        <td>
 					                          <a href="${pageContext.request.contextPath}/rest/product/edit?id=${product.id}" role="button" class="btn btn-primary btn-sm">
-											    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改
+											    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+											    &nbsp;&nbsp;修改
 											  </a>
 											  <a rel="rs-dialog" data-target="myModal" role="button" class="btn btn-danger btn-sm" target="${product.id}">
-											    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> 删除
+											    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+											    &nbsp;&nbsp;删除
 											  </a>
 					                        </td>
 					                    </tr>
@@ -352,7 +353,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         <script src="assets/plugins/respond.min.js"></script>
         <script src="assets/plugins/excanvas.min.js"></script>
         <![endif]-->
-        <script src="assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+        <script src="assets/plugins/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
         <script src="assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
         <script src="assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
         <script src="assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
