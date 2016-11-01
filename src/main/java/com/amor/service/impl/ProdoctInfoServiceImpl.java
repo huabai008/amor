@@ -88,4 +88,9 @@ public class ProdoctInfoServiceImpl implements ProductInfoService {
 	public int deleteProductImages(Integer productId) {
 		return prodImgMapper.deleteByProductId(productId);
 	}
+
+	@Override
+	public AProductImage selectProductImage(Integer id) {
+		return prodImgMapper.selectByPrimaryKey(id);
+	}
 }

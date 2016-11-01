@@ -62,6 +62,13 @@ public interface ProductInfoService {
 	AProduct selectProductByID(Integer id);
 	
 	/**
+	 * 获取图片信息
+	 * @param id
+	 * @return
+	 */
+	AProductImage selectProductImage(Integer id);
+	
+	/**
 	 * 获取产品的所有图片
 	 * @param productId
 	 * @return

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -170,15 +171,19 @@ public class ProductInfoController {
 			String warningMsg = uploadFiles(prodImg, files);
 			
 			String[] deleteImageIds = request.getParameterValues("del");
+			List<AProductImage> images = new LinkedList<>();
 			if (deleteImageIds != null && deleteImageIds.length > 0) {
 				for (String imageId : deleteImageIds) {
 					try {
-						productInfoSerivce.deleteProductImage(Integer.parseInt(imageId));
+						int imgId = Integer.parseInt(imageId);
+						images.add(productInfoSerivce.selectProductImage(imgId));
+						productInfoSerivce.deleteProductImage(imgId);
 					} catch (NumberFormatException e) {
 						warningMsg += e.getMessage();
 					}
 				}
 			}
+			warningMsg += deleteFiles(images);
 			if (warningMsg.length() > 0) {
 				model.addAttribute("warning", 1);
 				model.addAttribute("FileUploadError", warningMsg);
@@ -202,11 +207,17 @@ public class ProductInfoController {
 		try {
 			String id = request.getParameter("prod_id");
 			if (id != null && id.length() > 0) {
-				int flag = productInfoSerivce.deleteProductInfo(Integer.parseInt(id));
-				int del = productInfoSerivce.deleteProductImages(Integer.parseInt(id));
-				// TODO: delete image files on disk
+				int productId = Integer.parseInt(id);
+				List<AProductImage> images = productInfoSerivce.selectProductImageByID(productId);
+				int flag = productInfoSerivce.deleteProductInfo(productId);
+				int del = productInfoSerivce.deleteProductImages(productId);
+				String warningMsg = deleteFiles(images);
 				if (flag * del > 0) {
 					model.addAttribute("success", 1);
+				}
+				if (warningMsg.length() > 0) {
+					model.addAttribute("warning", 1);
+					model.addAttribute("img_del_err", warningMsg);
 				}
 			}
 			return "redirect:/rest/product/";
@@ -329,6 +340,33 @@ public class ProductInfoController {
 	            }
     		}
         }
+		return warningMsg;
+	}
+	
+	private String deleteFiles(List<AProductImage> images) throws IOException{
+		String warningMsg = "";
+		Properties props = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/config.properties"));
+		String uploadDir = props.getProperty("upload.dir");
+		for (AProductImage image : images) {
+			String url = image.getImgPath();
+			String fileName = "";
+			int index = url.lastIndexOf('/');
+			if (index > 0) {
+	        	fileName = uploadDir + url.substring(index);
+	        } else {
+	        	fileName = uploadDir + url;
+	        } 
+			try {
+				File fs = new File(fileName);
+				if (fs.exists() && fs.isFile()) {
+					if (fs.delete()) {
+						System.out.println("Removed: " + fileName);
+					}
+				}
+			} catch(Exception e) {
+				warningMsg += fileName + ":" + e.getMessage();
+			}
+		}
 		return warningMsg;
 	}
 	
