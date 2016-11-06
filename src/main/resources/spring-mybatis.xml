@@ -53,6 +53,12 @@
 		<property name="removeAbandonedTimeout" value="120"></property>
 	</bean>
 	
+	<!-- solr -->
+	<bean id="solrClient" class="org.apache.solr.client.solrj.impl.HttpSolrClient">
+		<!-- <property name="baseURL" value="${solr.url}"></property> -->
+		<constructor-arg value="${solr.url}"></constructor-arg>
+	</bean>
+	
 	<!-- Session工厂 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
@@ -107,5 +113,4 @@
 	
 	<!-- 注解方式配置缓存 -->
 	<cache:annotation-driven cache-manager="cacheManager"/>
-	
 </beans>

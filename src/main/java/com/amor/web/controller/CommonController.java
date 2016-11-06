@@ -1,5 +1,6 @@
 package com.amor.web.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
@@ -11,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.amor.core.util.Constants;
+import com.amor.core.util.SolrServiceImpl;
+import com.amor.orm.model.AProduct;
 
 /**
  * 公共控制器
@@ -20,6 +23,8 @@ import com.amor.core.util.Constants;
 
 @Controller
 public class CommonController {
+	@Resource
+	private SolrServiceImpl solrService;
 	/**
 	 * 首页
 	 */
@@ -28,6 +33,10 @@ public class CommonController {
 	public String index(HttpServletRequest request, Model model){
 		Subject subject = SecurityUtils.getSubject();
 		model.addAttribute("userid", subject.getSession().getAttribute(Constants.USER_ID));
+		
+		AProduct p = solrService.queryById("11", AProduct.class);
+		System.out.println(p);
+		
 		return "index";
 	}
 	
