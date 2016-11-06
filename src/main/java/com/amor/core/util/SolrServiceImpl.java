@@ -1,29 +1,32 @@
-package com.amor.web.solr;
+package com.amor.core.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.solr.client.solrj.SolrClient;
+import javax.annotation.Resource;
+
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.springframework.stereotype.Service;
 
-import com.amor.core.util.ReflectUtils;
 import com.amor.orm.model.Page;
 
-public class SolrUtils {
-	 /** 
+@Service
+public class SolrServiceImpl implements SolrService{
+	
+	@Resource
+	private HttpSolrClient solrClient;
+	
+	/** 
      * 为多个文档对象的，某些属性建立索引 
-     * 
-     * @date 2015-8-30 下午5:33:29 
-     * @param list 
-     * @param properties 
-     * @param solrClient 
      */  
-    public static <T> void addDocs(List<T> list, List<String> properties, SolrClient solrClient) {  
+    public <T> void addDocs(List<T> list, List<String> properties) {  
         if(null == list || list.size() == 0 ) {  
             return;  
         }  
@@ -50,26 +53,17 @@ public class SolrUtils {
       
     /** 
      * 建立单个索引 
-     * 
-     * @param <T> 
-     * @date 2015-8-30 下午5:33:58 
-     * @param student 
-     * @param properties 
      */  
-    public static <T> void addDoc(T obj, List<String> properties, SolrClient solrClient) {  
+    public <T> void addDoc(T obj, List<String> properties) {  
         List<T> list = new ArrayList<T>();  
         list.add(obj);  
-        addDocs(list, properties, solrClient);  
+        addDocs(list, properties);  
     }  
       
     /** 
      * 将整个对象都添加到索引 
-     * @author wuyw 
-     * @param <T> 
-     * @date 2015-8-30 下午5:35:34 
-     * @param student 
      */  
-    public static <T> void addBean(T obj, SolrClient solrClient) {  
+    public <T> void addBean(T obj) {  
         try {  
             solrClient.addBean(obj);  
             solrClient.commit();  
@@ -80,12 +74,8 @@ public class SolrUtils {
       
     /** 
      * 添加多个索引对象 
-     * 
-     * @param <T> 
-     * @date 2015-8-30 下午5:36:37 
-     * @param students 
      */  
-    public static <T> void addBeans(List<T> list, SolrClient solrClient) {  
+    public <T> void addBeans(List<T> list) {  
         try {  
             solrClient.addBeans(list);  
             solrClient.commit();  
@@ -96,11 +86,8 @@ public class SolrUtils {
       
     /** 
      * 根据id删除某条索引 
-     *  
-     * @date 2015-8-30 下午5:37:46 
-     * @param id 
      */  
-    public static void deleteById(String id, SolrClient solrClient) {  
+    public void deleteById(String id) {  
         try {  
             solrClient.deleteById(id);  
             solrClient.commit();  
@@ -111,11 +98,8 @@ public class SolrUtils {
       
     /** 
      * 根据查询语句删除索引 
-     * 
-     * @date 2015-8-30 下午5:38:46 
-     * @param query 
      */  
-    public static void deleteByQuery(String query, SolrClient solrClient) {  
+    public void deleteByQuery(String query) {  
         try {  
             solrClient.deleteByQuery(query);  
             solrClient.commit();  
@@ -124,8 +108,8 @@ public class SolrUtils {
         }  
     }  
       
-    @SuppressWarnings("unchecked")  
-    public static <T> T queryById(String id, Class<?> entityClass, SolrClient solrClient) {  
+    @SuppressWarnings("unchecked")
+	public <T> T queryById(String id, Class<?> entityClass) {  
         T obj = null;  
         try {  
             obj = (T) entityClass.newInstance();  
@@ -148,14 +132,47 @@ public class SolrUtils {
         ArrayList<Field> fields = ReflectUtils.getAllFields(obj.getClass());  
         for (Field field : fields) {  
             String propertyName = field.getName();  
-            String propertyValue = (String) doc.getFieldValue(propertyName);  
+            Object propertyValue = doc.getFieldValue(propertyName);  
+            if(propertyValue == null)
+            	continue;
+            
             Class<?> propertyClass = field.getType();  
-            if(propertyClass.equals(Integer.class)) {  
-                Integer value = Integer.valueOf(propertyValue);  
-                ReflectUtils.setFieldValue(obj, propertyClass, propertyName, value);  
-            } else {  
-                ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
-            }  
+            ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
+        }  
+          
+        return obj;  
+    }  
+    
+    @SuppressWarnings("unchecked")
+	public <T> T query(String queryStr, Class<?> entityClass) {  
+        T obj = null;  
+        try {  
+            obj = (T) entityClass.newInstance();  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        SolrQuery query = new SolrQuery();  
+        query.setQuery(queryStr);  
+        QueryResponse response = null;  
+        try {  
+            response = solrClient.query(query);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        SolrDocumentList docs = response.getResults();  
+        if(null == docs || docs.size() == 0) {  
+            return null;  
+        }  
+        SolrDocument doc = docs.get(0);  
+        ArrayList<Field> fields = ReflectUtils.getAllFields(obj.getClass());  
+        for (Field field : fields) {  
+            String propertyName = field.getName();  
+            Object propertyValue = doc.getFieldValue(propertyName);  
+            if(propertyValue == null)
+            	continue;
+            
+            Class<?> propertyClass = field.getType();  
+            ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
         }  
           
         return obj;  
@@ -164,14 +181,9 @@ public class SolrUtils {
     /** 
      * solr获取的分页对象 
      *  
-     * @param <T> 
-     * @date 2015-8-30 下午5:39:36 
-     * @param page 
-     * @param solrQuery 里面封装了查询对象的条件 
-     * @return 
      */  
     @SuppressWarnings("unchecked")  
-    public static <T> Page<T> getPage(Page<T> page, SolrQuery solrQuery, SolrClient solrClient, Class<?> entityClass) {  
+    public <T> Page<T> getPage(Page<T> page, SolrQuery solrQuery, Class<?> entityClass) {  
         solrQuery.setStart(page.getStartPage());
         solrQuery.setRows(page.getPageSize());
         QueryResponse queryResponse = null;  
@@ -193,14 +205,12 @@ public class SolrUtils {
             ArrayList<Field> fields = ReflectUtils.getAllFields(obj.getClass());  
             for (Field field : fields) {  
                 String propertyName = field.getName();  
-                String propertyValue = (String) doc.getFieldValue(propertyName);  
+                Object propertyValue = doc.getFieldValue(propertyName);
+                if(propertyValue == null)
+                	continue;
+                
                 Class<?> propertyClass = field.getType();  
-                if(propertyClass.equals(Integer.class)) {  
-                    Integer value = Integer.valueOf(propertyValue);  
-                    ReflectUtils.setFieldValue(obj, propertyClass, propertyName, value);  
-                } else {  
-                    ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
-                }  
+                ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
             }  
             list.add(obj);  
         }  
@@ -211,11 +221,8 @@ public class SolrUtils {
       
     /** 
      * 优化solr索引 
-     * 
-     * @date 2015-8-31 上午12:02:49 
-     * @param solrClient 
      */  
-    public static void optimize(String collection, SolrClient solrClient) {  
+    public void optimize(String collection) {  
         try {  
             solrClient.optimize(collection);  
         } catch (Exception e) {  
