@@ -53,6 +53,12 @@
 		<property name="removeAbandonedTimeout" value="120"></property>
 	</bean>
 	
+	<!-- solr -->
+	<bean id="solrClient" class="org.apache.solr.client.solrj.impl.HttpSolrClient">
+		<!-- <property name="baseURL" value="${solr.url}"></property> -->
+		<constructor-arg value="${solr.url}"></constructor-arg>
+	</bean>
+	
 	<!-- Session工厂 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
@@ -97,10 +103,14 @@
 	</aop:config>
 	
 	<!-- 缓存管理 -->
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehCacheManagerFactory"></bean>
-	<bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:ehcache.xml"></bean>
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehCacheManagerFactory"></property>
+	</bean>
+	<bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml"></property>
+		<property name="shared" value="true"></property>
+	</bean>
 	
 	<!-- 注解方式配置缓存 -->
 	<cache:annotation-driven cache-manager="cacheManager"/>
-	
 </beans>

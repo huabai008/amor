@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+401 没有权限
+<a href="/amor/rest/user/logout">logout</a>
 </body>
 </html>
