@@ -64,7 +64,31 @@ public interface AProductImageMapper {
     AProductImage selectByPrimaryKey(Integer id);
     
     /**
-     * This method was created by sicong.yang for select all the images of a specific product
+     * This method was created by sicong.yang.
+     * This method corresponds to the database table A_PRODUCT_IMAGE
+     *
+     * @mbggenerated Sun Oct 23 14:40:44 CST 2016
+     */
+    @Select({
+    	"select",
+    	"id, product_id, img_path, create_datetime",
+        "from A_PRODUCT_IMAGE",
+    	"where id = (",
+    	"select",
+    	"MAX(id)",
+        "from A_PRODUCT_IMAGE",
+        "where product_id = #{productId,jdbcType=INTEGER})"
+    })
+    @Results({
+        @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
+        @Result(column="product_id", property="productId", jdbcType=JdbcType.INTEGER),
+        @Result(column="img_path", property="imgPath", jdbcType=JdbcType.VARCHAR),
+        @Result(column="create_datetime", property="createDatetime", jdbcType=JdbcType.TIMESTAMP)
+    })
+    AProductImage selectPriorityImage(Integer product_id);
+    
+    /**
+     * This method was created by sicong.yang to select all the images of a specific product
      * This method corresponds to the database table A_PRODUCT_IMAGE
      *
      * @mbggenerated Sun Oct 23 14:40:44 CST 2016

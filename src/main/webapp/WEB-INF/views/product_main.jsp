@@ -197,7 +197,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                    			<div class="alert alert-warning alert-dismissible" role="alert">
                    				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                    				<strong>File Upload Warning!</strong>
-                   				${FileUploadError}
+                   				${param['FileUploadError']}
                    			</div>
                    			</c:if>
                     		</div>
@@ -211,6 +211,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 										<form:select path="typeMap" items="${typeMap}" class="form-control" id="item_type" name="item_type" />
 									</div>
 									<div  class="col-sm-2">
+										<input type="hidden" value="${page.pageNum}" name="page" id="page" />
 										<button type="submit" class="btn btn-success">
 										  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 										  &nbsp;&nbsp;新增
@@ -225,35 +226,33 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					        <div class="panel panel-default">
 					          <div class="panel-heading">产品列表</div>
 					          <c:if test="${page!=null}">
-					          <table class="table table-striped" style="width:100%;">
-					                <thead>
-					                  <tr>
-					                    <th>ID</th>
-					                    <th>货号</th>
-					                    <th>商品类型</th>
-					                    <th>操作</th>
-					                  </tr>
-					                </thead>
-					                <tbody>
-					                <c:forEach items="${page.list}" var="product">
-					                    <tr>
-					                        <td>${product.id}</td>
-					                        <td>${product.itemCode}</td>
-					                        <td>${typeMap[product.itemType]}</td>
-					                        <td>
-					                          <a href="${pageContext.request.contextPath}/rest/product/edit?id=${product.id}" role="button" class="btn btn-primary btn-sm">
-											    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-											    &nbsp;&nbsp;修改
-											  </a>
-											  <a rel="rs-dialog" data-target="myModal" role="button" class="btn btn-danger btn-sm" target="${product.id}">
-											    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-											    &nbsp;&nbsp;删除
-											  </a>
-					                        </td>
-					                    </tr>
-					                </c:forEach>
-					                </tbody>
-					            </table>
+					          <div class="list-group" style="width:100%;">
+				                <c:forEach items="${page.list}" var="product">
+				                    <div class="list-group-item row">
+				                      <img src="${prod_imgs[product.id]}" class="col-xs-6 col-md-4 col-lg-3" />
+				                      <div class="col-xs-6 col-md-8 col-lg-9">
+				                        <h4 class="list-group-item-heading">
+				                        ${typeMap[product.itemType]}：&nbsp;&nbsp;${product.itemCode}</h4>
+				                        <p class="list-group-item-text bottom-buffer">
+				                          <c:if test="${silhouetteMap[product.silhouette] != null}">
+				                          <br />&nbsp;&nbsp;裙型：${silhouetteMap[product.silhouette]}</c:if>
+				                          <br />&nbsp;&nbsp;租赁价：${product.priceRent}元，
+				                          &nbsp;&nbsp;零售价：${product.priceSell}元
+				                          <br />
+				                        </p>
+				                        <a href="${pageContext.request.contextPath}/rest/product/edit?id=${product.id}&page=${page.pageNum}" role="button" class="btn btn-primary btn-sm">
+										    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+										    &nbsp;&nbsp;修改
+										  </a>
+										  <a rel="rs-dialog" data-target="myModal" role="button" class="btn btn-danger btn-sm" target="${product.id}">
+										    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+										    &nbsp;&nbsp;删除
+										  </a>
+				                      </div>
+				                      
+				                    </div>
+				                </c:forEach>
+					            </div>
 					          </c:if>
 					        </div>
 					      </div>
@@ -341,6 +340,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
             <div class="rs-dialog-body"> 
               <p>请确认是否要删除该条记录</p> 
               <input type="hidden" value="" name="prod_id" id="prod_id" />
+              <input type="hidden" value="${page.pageNum}" name="page" id="page" />
             </div> 
             <div class="rs-dialog-footer">
               <input type="button" class="btn btn-default rs-close" value="关闭" />

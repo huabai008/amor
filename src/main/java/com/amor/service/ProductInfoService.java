@@ -69,6 +69,13 @@ public interface ProductInfoService {
 	AProductImage selectProductImage(Integer id);
 	
 	/**
+	 * get the top priority image of product.
+	 * @param product_id
+	 * @return
+	 */
+	AProductImage selectTopPriorityImage(Integer product_id);
+	
+	/**
 	 * 获取产品的所有图片
 	 * @param productId
 	 * @return

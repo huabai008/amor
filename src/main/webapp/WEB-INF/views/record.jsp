@@ -490,12 +490,11 @@
 					</div>
 					<div class="row bottom-buffer">
 						<div class="col-xs-4">
-							<input type="hidden" id="create_uid" name="create_uid"
-								value="${ product.createUid }"></input> <input type="hidden"
-								id=user_no " name="user_no" value="${ product.updateUid }000"></input>
-							<input type="hidden" id="create_time" name="create_time"
-								value="${ createDate }"></input> <input type="hidden"
-								id="prod_id" name="prod_id" value="${ product.id }"></input>
+							<input type="hidden" id="create_uid" name="create_uid" value="${ product.createUid }"></input>
+							<input type="hidden" id=user_no " name="user_no" value="${ product.updateUid }000"></input>
+							<input type="hidden" id="create_time" name="create_time" value="${ createDate }"></input>
+							<input type="hidden" id="prod_id" name="prod_id" value="${ product.id }"></input>
+							<input type="hidden" id="page" name="page" value="${param['page']}"></input>
 							<button type="submit" class="btn btn-success">提交</button>
 							<a href="javascript:history.back()" class="btn btn-danger">取消</a>
 						</div>

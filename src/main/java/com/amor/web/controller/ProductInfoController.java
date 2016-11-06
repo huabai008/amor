@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,12 @@ public class ProductInfoController {
 		try {
 			Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 			model.addAttribute("typeMap", map);
+			map = productInfoSerivce.getBusinessDict("product_silhouette");
+			Map<String, String> smap = new HashMap<>();
+			for (int idx : map.keySet()) {
+				smap.put(String.valueOf(idx), map.get(idx));
+			}
+			model.addAttribute("silhouetteMap", smap);
 			
 			int pageNum = 1;
 			int pageSize = 10;
@@ -57,6 +64,17 @@ public class ProductInfoController {
 				pageSize = Integer.parseInt(psz);
 			}
 			List<AProduct> prod_list = productInfoSerivce.queryProductByPage(pageNum, pageSize);
+			Map<Integer, String> productImages = new HashMap<>();
+			String imgOc = "assets/img/no-image.jpg";
+			for (AProduct product : prod_list) {
+				AProductImage image = productInfoSerivce.selectTopPriorityImage(product.getId());
+				if (image != null) {
+					productImages.put(product.getId(), image.getImgPath());
+				} else {
+					productImages.put(product.getId(), imgOc);
+				}
+			}
+			model.addAttribute("prod_imgs", productImages);
 			PageInfo<AProduct> page = new PageInfo<AProduct>(prod_list);
 			model.addAttribute("page", page);
 		} catch (Exception e) {
@@ -67,6 +85,8 @@ public class ProductInfoController {
 	
 	@RequestMapping(value="/record")
 	public String record(Model model, HttpServletRequest request) {
+		String page = request.getParameter("page");
+		page = (page != null && page.length() > 0) ? page : "1";
 		try {
 			String[] dicts = {"trends", "silhouette", "neckline", "waistline", "sleeve", 
 							  "color", "size", "type", "collar_stays", "cuff_words_type", 
@@ -76,16 +96,17 @@ public class ProductInfoController {
 				model.addAttribute(dict + "Map", map);
 			}
 			model.addAttribute("item_type", Integer.parseInt(request.getParameter("item_type")));
-			
-			return "record";
+			model.addAttribute("page", page);
 		} catch (Error e) {
 			model.addAttribute("error", e);
-			return "record";
 		}
+		return "record";
 	}
 	
 	@RequestMapping(value="/edit")
 	public String edit(Model model, HttpServletRequest request) {
+		String page = request.getParameter("page");
+		page = (page != null && page.length() > 0) ? page : "1";
 		try {
 			String[] dicts = {"silhouette", "neckline", "waistline", "sleeve", 
 							  "color", "size", "type", "collar_stays", "cuff_words_type", 
@@ -97,6 +118,7 @@ public class ProductInfoController {
 				model.addAttribute(dict + "Map", map);
 			}
 			String productID = request.getParameter("id");
+			
 			if (productID != null) {
 				model.addAttribute("edit", 1);
 				AProduct product = productInfoSerivce.selectProductByID(Integer.parseInt(productID));
@@ -119,12 +141,11 @@ public class ProductInfoController {
 				return "record";
 			} else {
 				model.addAttribute("error", "ID parameter required!");
-				return "redirect:/rest/product/";
 			}
 		} catch (Error e) {
 			model.addAttribute("error", e.getMessage());
-			return "redirect:/rest/product/";
 		}
+		return "redirect:/rest/product/?pageNum=" + page + "&pageSize=10";
 	}
 	
 	@RequestMapping(value="/new", method=RequestMethod.POST)
@@ -133,7 +154,8 @@ public class ProductInfoController {
 			@RequestParam("file") MultipartFile[] files) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
-		model.addAttribute("page", retrievePage(1, 10));
+		String page = request.getParameter("page");
+		page = (page != null && page.length() > 0) ? page : "1";
 		
 		try {
 			prepareData(product, request);
@@ -148,12 +170,11 @@ public class ProductInfoController {
 
 			model.addAttribute("success", 1);
             model.addAttribute("FileUploadError", warningMsg);
-			return "redirect:/rest/product/";
 		} catch (Exception err) {
 			model.addAttribute("success", 0);
 			model.addAttribute("error", err.getMessage());
-			return "redirect:/rest/product/";
 		}
+		return "redirect:/rest/product/?pageNum=" + page + "&pageSize=10";
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
@@ -162,7 +183,8 @@ public class ProductInfoController {
 			@RequestParam("file") MultipartFile[] files) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
-		model.addAttribute("page", retrievePage(1, 10));
+		String page = request.getParameter("page");
+		page = (page != null && page.length() > 0) ? page : "1";
 		try {
 			prepareData(product, request);
 			productInfoSerivce.updateProductInfo(product);
@@ -190,19 +212,19 @@ public class ProductInfoController {
 			}
 			
 			model.addAttribute("success", 1);
-			return "redirect:/rest/product/";
 		} catch (Exception err) {
 			model.addAttribute("success", 0);
 			model.addAttribute("error", err.getMessage());
-			return "redirect:/rest/product/";
 		}
+		return "redirect:/rest/product/?pageNum=" + page + "&pageSize=10";
 	}
 	
 	@RequestMapping(value="/delete", method=RequestMethod.POST)
 	public String delete(HttpServletRequest request, Model model) {
 		Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 		model.addAttribute("typeMap", map);
-		model.addAttribute("page", retrievePage(1, 10));
+		String page = request.getParameter("page");
+		page = (page != null && page.length() > 0) ? page : "1";
 		
 		try {
 			String id = request.getParameter("prod_id");
@@ -220,12 +242,11 @@ public class ProductInfoController {
 					model.addAttribute("img_del_err", warningMsg);
 				}
 			}
-			return "redirect:/rest/product/";
 		} catch (Exception err) {
 			model.addAttribute("success", 0);
 			model.addAttribute("error", err.getMessage());
-			return "redirect:/rest/product/";
 		}
+		return "redirect:/rest/product/?pageNum=" + page + "&pageSize=10";
 	}
 	
 	/**
@@ -343,6 +364,12 @@ public class ProductInfoController {
 		return warningMsg;
 	}
 	
+	/**
+	 * Delete image files on disk.
+	 * @param images
+	 * @return Waring messages.
+	 * @throws IOException
+	 */
 	private String deleteFiles(List<AProductImage> images) throws IOException{
 		String warningMsg = "";
 		Properties props = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/config.properties"));
@@ -370,14 +397,4 @@ public class ProductInfoController {
 		return warningMsg;
 	}
 	
-	/**
-	 * Get the records according to page number and size.
-	 * @param pageNum
-	 * @param pageSize
-	 * @return records of product information
-	 */
-	private PageInfo<AProduct> retrievePage(int pageNum, int pageSize) {
-		List<AProduct> prod_list = productInfoSerivce.queryProductByPage(pageNum, pageSize);
-		return new PageInfo<AProduct>(prod_list);
-	}
 }

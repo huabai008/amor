@@ -32,9 +32,6 @@
 				/assets/** = anon
 				/rest/**/login=anon
 				/rest/**/logout = logout
-				/rest/product/** = anon
-				/rest/multipleUpload = anon
-				/rest/multipleSave = anon
 				<!-- protected -->
 				/rest/auth/**=authc
 				/**=user
