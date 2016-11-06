@@ -18,7 +18,7 @@ var Login = function() {
             },
 
             messages : {
-                loginName : {
+            	username : {
                     required : "用户名不能为空."
                 },
                 password : {
@@ -127,30 +127,6 @@ var Login = function() {
 
     var handleRegister = function() {
 
-        function format(state) {
-            if (!state.id)
-                return state.text; // optgroup
-            return "<img class='flag' src='assets/img/flags/"
-                    + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;"
-                    + state.text;
-        }
-
-        $("#select2_sample4")
-                .select2(
-                        {
-                            placeholder : '<i class="fa fa-map-marker"></i>&nbsp;Select a Country',
-                            allowClear : true,
-                            formatResult : format,
-                            formatSelection : format,
-                            escapeMarkup : function(m) {
-                                return m;
-                            }
-                        });
-
-        $('#select2_sample4').change(function() {
-            $('.register-form').validate().element($(this)); // revalidate the chosen dropdown value and show error or success message for the input
-        });
-
         $('.register-form').validate({
             errorElement : 'span', // default input error message container
             errorClass : 'help-block', // default input error message class
@@ -158,58 +134,41 @@ var Login = function() {
             ignore : "",
             rules : {
 
-                fullname : {
-                    required : true
-                },
-                email : {
-                    required : true,
-                    email : true
-                },
-                address : {
-                    required : true
-                },
-                city : {
-                    required : true
-                },
-                country : {
-                    required : true
-                },
-
                 username : {
                     required : true
                 },
                 password : {
                     required : true
                 },
-                rpassword : {
+                repassword : {
                     equalTo : "#register_password"
                 },
-
-                tnc : {
+                agreement : {
                     required : true
                 }
             },
 
             messages : { // custom messages for radio buttons and checkboxes
-                tnc : {
-                    required : "Please accept TNC first."
+            	username : {
+                    required : "用户名不能为空."
+                },
+                password : {
+                    required : "密码不能为空."
+                },
+                repassword : {
+                	equalTo : "再次输入密码必须与密码一致."
+                },
+            	agreement : {
+                    required : "必须同意."
                 }
             },
 
-            invalidHandler : function(event, validator) { // display error
-                // alert on form
-                // submit
+            invalidHandler : function(event, validator) { // display error alert on form submit
 
             },
 
             highlight : function(element) { // hightlight error inputs
-                $(element).closest('.form-group').addClass('has-error'); // set
-                // error
-                // class
-                // to
-                // the
-                // control
-                // group
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
             },
 
             success : function(label) {
@@ -218,10 +177,8 @@ var Login = function() {
             },
 
             errorPlacement : function(error, element) {
-                if (element.attr("name") == "tnc") { // insert checkbox
-                    // errors after the
-                    // container
-                    error.insertAfter($('#register_tnc_error'));
+                if (element.attr("name") == "agreement") { // insert checkbox errors after the container
+                    error.insertAfter($('#register_agreement_error'));
                 } else if (element.closest('.input-icon').size() === 1) {
                     error.insertAfter(element.closest('.input-icon'));
                 } else {
@@ -257,16 +214,9 @@ var Login = function() {
     return {
         // main function to initiate the module
         init : function() {
-            console.log(12);
             handleLogin();
             handleForgetPassword();
             handleRegister();
-
-            $.backstretch([ "assets/img/bg/1.jpg", "assets/img/bg/2.jpg",
-                    "assets/img/bg/3.jpg", "assets/img/bg/4.jpg" ], {
-                fade : 1000,
-                duration : 8000
-            });
         }
 
     };

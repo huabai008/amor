@@ -3,6 +3,7 @@ package com.amor.web.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ public class CommonController {
 	 * 首页
 	 */
 	@RequestMapping("/index")
-	@RequiresRoles("2")
+	@RequiresRoles(value={"0","1"}, logical=Logical.OR)
 	public String index(HttpServletRequest request, Model model){
 		Subject subject = SecurityUtils.getSubject();
 		model.addAttribute("userid", subject.getSession().getAttribute(Constants.USER_ID));
