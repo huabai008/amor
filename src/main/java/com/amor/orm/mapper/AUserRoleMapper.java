@@ -30,7 +30,7 @@ public interface AUserRoleMapper {
      * @mbggenerated Sun Oct 16 16:13:26 CST 2016
      */
     @Insert({
-        "insert into A_USER_ROLE (id, user_id, ",
+        "replace into A_USER_ROLE (id, user_id, ",
         "role_id)",
         "values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, ",
         "#{roleId,jdbcType=INTEGER})"

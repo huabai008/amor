@@ -47,11 +47,7 @@ public class ProductInfoController {
 			Map<Integer, String> map = productInfoSerivce.getBusinessDict("product_type");
 			model.addAttribute("typeMap", map);
 			map = productInfoSerivce.getBusinessDict("product_silhouette");
-			Map<String, String> smap = new HashMap<>();
-			for (int idx : map.keySet()) {
-				smap.put(String.valueOf(idx), map.get(idx));
-			}
-			model.addAttribute("silhouetteMap", smap);
+			model.addAttribute("silhouetteMap", map);
 			
 			int pageNum = 1;
 			int pageSize = 10;
@@ -293,12 +289,12 @@ public class ProductInfoController {
 			} else {
 				product.setTrends("");
 			}
-			product.setSilhouette(request.getParameter("silhouette"));
-			product.setNeckline(request.getParameter("waistline"));
-			product.setWaistline(request.getParameter("waistline"));
-			product.setSleeve(request.getParameter("sleeve"));
-			product.setColor(request.getParameter("color"));
-			product.setSize(request.getParameter("size"));
+			product.setSilhouette(Integer.parseInt(request.getParameter("silhouette")));
+			product.setNeckline(Integer.parseInt(request.getParameter("waistline")));
+			product.setWaistline(Integer.parseInt(request.getParameter("waistline")));
+			product.setSleeve(Integer.parseInt(request.getParameter("sleeve")));
+			product.setColor(Integer.parseInt(request.getParameter("color")));
+			product.setSize(Integer.parseInt(request.getParameter("size")));
 		}
 		
 		// shirt
@@ -307,7 +303,7 @@ public class ProductInfoController {
 			product.setPlacket(Integer.parseInt(request.getParameter("placket")));
 			product.setVersion(Integer.parseInt(request.getParameter("version")));
 			product.setWhiteCollarSleeve(Integer.parseInt(request.getParameter("white_collar")));
-			product.setPocket(request.getParameter("pocket"));
+			product.setPocket(Integer.parseInt(request.getParameter("pocket")));
 			product.setMaterial(request.getParameter("material"));
 		}
 		// suit

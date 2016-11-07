@@ -73,4 +73,23 @@ public class UserServiceImpl extends BaseServiceImpl<AUser, Integer> implements 
 		}
 		return result;
 	}
+
+	@Override
+	public int addUserRole(AUser user, Integer role_id) {
+		return addUserRole(user.getId(), role_id);
+	}
+	
+	@Override
+	public int addUserRole(Integer user_id, Integer role_id) {
+		AUserRole role = new AUserRole();
+		role.setUserId(user_id);
+		role.setRoleId(role_id);
+		return userRoleMapper.insert(role);
+	}
+
+	@Override
+	public int deleteUserRole(AUser user, Integer role_id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

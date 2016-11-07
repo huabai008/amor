@@ -12,4 +12,10 @@ public interface UserService extends BaseService<AUser, Integer>{
 	void selectUserRole(AUser user);
 
 	Set<Integer> selectRoleIdByUserId(Integer user_id);
+	
+	int addUserRole(AUser user, Integer role_id); 
+	
+	int addUserRole(Integer user_id, Integer role_id);
+	
+	int deleteUserRole(AUser user, Integer role_id);
 }

@@ -67,4 +67,8 @@
 	
 	<!-- 处理静态文件 -->
 	<mvc:default-servlet-handler/>
+	
+	<!-- solr -->
+	<bean id="httpSolrServer" class="org.apache.solr.client.solrj.impl.HttpSolrServer">
+	</bean>
 </beans>

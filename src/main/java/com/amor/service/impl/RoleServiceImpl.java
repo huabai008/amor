@@ -48,5 +48,22 @@ public class RoleServiceImpl extends BaseServiceImpl<ARole, Integer> implements 
 		return result;
 	}
 
+	@Override
+	public int addRolePermission(ARole role, Integer permission_id){
+		return addRolePermission(role.getId(), permission_id);
+	}
 	
+	@Override
+	public int addRolePermission(Integer role_id, Integer permission_id){
+		ARolePermission permission = new ARolePermission();
+		permission.setRoleId(role_id);
+		permission.setPermissionId(permission_id);
+		return rolePermissionMapper.insert(permission);
+	}
+
+	@Override
+	public int deleteRolePermission(ARole role, Integer permission_id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

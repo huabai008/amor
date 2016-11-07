@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -46,6 +47,7 @@ public interface AUserMapper extends BaseMapper<AUser, Integer>{
         "#{status,jdbcType=INTEGER}, #{loginCode,jdbcType=VARCHAR}, ",
         "#{registerFrom,jdbcType=VARCHAR})"
     })
+    @Options(useGeneratedKeys=true, keyProperty="id")
     int insert(AUser record);
 
     /**

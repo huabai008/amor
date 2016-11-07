@@ -8,5 +8,6 @@
 </head>
 <body>
 401
+<a href="/amor/rest/user/logout">logout</a>
 </body>
 </html>
