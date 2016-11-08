@@ -62,7 +62,7 @@
 					data-toggle="dropdown" data-hover="dropdown"
 					data-close-others="true"> <img alt=""
 						src="assets/img/avatar1_small.jpg" /> <span class="username">
-							${userInfo.username } </span> <i class="fa fa-angle-down"></i>
+							${username } </span> <i class="fa fa-angle-down"></i>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="javascript:;" id="trigger_fullscreen"> <i
@@ -491,7 +491,7 @@
 					<div class="row bottom-buffer">
 						<div class="col-xs-4">
 							<input type="hidden" id="create_uid" name="create_uid" value="${ product.createUid }"></input>
-							<input type="hidden" id=user_no " name="user_no" value="${ product.updateUid }000"></input>
+							<input type="hidden" id=user_no " name="user_no" value="${ product.updateUid }${userid }"></input>
 							<input type="hidden" id="create_time" name="create_time" value="${ createDate }"></input>
 							<input type="hidden" id="prod_id" name="prod_id" value="${ product.id }"></input>
 							<input type="hidden" id="page" name="page" value="${param['page']}"></input>
