@@ -54,9 +54,10 @@
 	</bean>
 	
 	<!-- solr -->
-	<bean id="solrClient" class="org.apache.solr.client.solrj.impl.HttpSolrClient">
-		<!-- <property name="baseURL" value="${solr.url}"></property> -->
+	<bean id="solrManager" class="com.amor.web.solr.SolrManagerImpl">
+		<!-- 
 		<constructor-arg value="${solr.url}"></constructor-arg>
+		-->
 	</bean>
 	
 	<!-- Session工厂 -->
