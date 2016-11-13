@@ -34,6 +34,7 @@
     this.name = this.$input.attr('name') || options.name
     
     this.$del = this.$element.find('input[type=hidden][name="del"]')
+    this.$imgid = this.$element.find('input[type=hidden][name="imgId"]')
     this.picid = options.picid || ""
 
     this.$hidden = this.$element.find('input[type=hidden][name="'+this.name+'"]')
@@ -71,6 +72,7 @@
       var file = e.target.files !== undefined ? e.target.files[0] : (e.target.value ? { name: e.target.value.replace(/^.+\\/, '') } : null)
       if (invoked === 'clear') return
       this.$del.val(this.picid)
+      this.$imgid.val("")
       if (!file) {
         this.clear()
         return
@@ -103,6 +105,7 @@
       this.$input.attr('name', '')
       
       this.$del.val(this.picid)
+      this.$imgid.val("")
 
       //ie8+ doesn't support changing the value of input with type=file so clone instead
       if($.browser && $.browser.msie){

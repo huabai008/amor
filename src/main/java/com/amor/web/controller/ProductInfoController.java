@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amor.core.util.Constants;
 import com.amor.orm.model.AProduct;
 import com.amor.orm.model.AProductImage;
 import com.amor.service.ProductInfoService;
@@ -84,6 +87,8 @@ public class ProductInfoController {
 		String page = request.getParameter("page");
 		page = (page != null && page.length() > 0) ? page : "1";
 		try {
+			Subject subject = SecurityUtils.getSubject();
+			model.addAttribute("userid", subject.getSession().getAttribute(Constants.USER_ID));
 			String[] dicts = {"trends", "silhouette", "neckline", "waistline", "sleeve", 
 							  "color", "size", "type", "collar_stays", "cuff_words_type", 
 							  "version", "placket"};
@@ -158,7 +163,7 @@ public class ProductInfoController {
 			int prodId = productInfoSerivce.insertProductInfo(product);
 			
 			prodImg.setProductId(prodId);
-			String warningMsg = uploadFiles(prodImg, files);
+			String warningMsg = uploadFiles(prodImg, request, files);
 			if (warningMsg.length() > 0) {
 				model.addAttribute("warning", 1);
 				model.addAttribute("FileUploadError", warningMsg);
@@ -186,7 +191,7 @@ public class ProductInfoController {
 			productInfoSerivce.updateProductInfo(product);
 			
 			prodImg.setProductId(product.getId());
-			String warningMsg = uploadFiles(prodImg, files);
+			String warningMsg = uploadFiles(prodImg, request, files);
 			
 			String[] deleteImageIds = request.getParameterValues("del");
 			List<AProductImage> images = new LinkedList<>();
@@ -320,13 +325,20 @@ public class ProductInfoController {
 	 * @return Waring messages of that image uploading may be unsuccessful.
 	 * @throws IOException
 	 */
-	private String uploadFiles(AProductImage prodImg, MultipartFile[] files) throws IOException{
-		String fileName = null;
+	private String uploadFiles(AProductImage prodImg, HttpServletRequest request,
+			MultipartFile[] files) throws IOException{
 		Properties props = null;
-		prodImg.setCreateDatetime(new Date());
 		props = PropertiesLoaderUtils.loadProperties(new ClassPathResource("/config.properties"));
 		String uploadDir = props.getProperty("upload.dir");
 		String baseURL = props.getProperty("upload.relative.baseurl");
+		
+		String fileName = null;
+		prodImg.setCreateDatetime(new Date());
+
+		String[] ids = request.getParameterValues("imgId");
+		String[] titles = request.getParameterValues("imgTitle");
+		String[] desc = request.getParameterValues("imgDesc");
+		String[] prior = request.getParameterValues("imgPrior");
 		String warningMsg = "";
 		if (files != null && files.length >0) {
     		for (int i = 0; i < files.length; i++) {
@@ -335,8 +347,16 @@ public class ProductInfoController {
 	                int dotIndex = fileName.lastIndexOf('.');
 	                if (dotIndex > 0 || files[i].getSize() > 0) {
 	                	fileName = fileName.substring(dotIndex);
-	                } else {
-	                	warningMsg += files[i].getOriginalFilename() + ":" + "file name is invalid or file is empty. |";
+	                } else if (ids[i].length() > 0) {
+	                	try {
+		                	AProductImage img = productInfoSerivce.selectProductImage(Integer.parseInt(ids[i]));
+		                	img.setTitle(titles[i]);
+		                	img.setDescription(desc[i]);
+		                	img.setPriority(Integer.parseInt(prior[i]));
+		                	productInfoSerivce.updateProductImage(img);
+	                	} catch (NumberFormatException e) {
+	                		warningMsg += ids[i] + ":" + e.getMessage() + "|";
+	                	}
 	                	continue;
 	                }
 	            	fileName = "/product_img_" + Calendar.getInstance().getTimeInMillis() + fileName;
@@ -347,9 +367,15 @@ public class ProductInfoController {
 	                        new BufferedOutputStream(new FileOutputStream(new File(fileName)));
 	                buffStream.write(bytes);
 	                buffStream.close();
-	                // TODO: prodImg.setPriority(getParameter);
-	                // TODO: prodImg.setImgSrc(fileURL);
-	                // TODO: prodImg.setImgPath(filePath);
+	                prodImg.setImgSrc(fileName);
+                	prodImg.setTitle(titles[i]);
+                	prodImg.setDescription(desc[i]);
+                	try {
+                		prodImg.setPriority(Integer.parseInt(prior[i]));
+                	} catch (NumberFormatException e) {
+                		warningMsg += files[i].getOriginalFilename() + ":" + e.getMessage() + "|";
+                		prodImg.setPriority(0);
+                	}
 	                prodImg.setImgPath(fileURL);
 	                productInfoSerivce.insertProductImage(prodImg);
 	            } catch (Exception e) {

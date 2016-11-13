@@ -81,11 +81,8 @@ public interface AProductImageMapper {
     	"select",
     	"id, product_id, img_path, create_datetime",
         "from A_PRODUCT_IMAGE",
-    	"where id = (",
-    	"select",
-    	"MAX(id)",
-        "from A_PRODUCT_IMAGE",
-        "where product_id = #{productId,jdbcType=INTEGER})"
+        "where product_id = #{productId,jdbcType=INTEGER}",
+        "order by priority limit 1"
     })
     @Results({
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
@@ -103,14 +100,18 @@ public interface AProductImageMapper {
      */
     @Select({
         "select",
-        "id, product_id, img_path, create_datetime",
+        "id, product_id, img_path, img_src, title, description, priority, create_datetime",
         "from A_PRODUCT_IMAGE",
         "where product_id = #{productId,jdbcType=INTEGER}"
     })
     @Results({
-        @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
+    	@Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="product_id", property="productId", jdbcType=JdbcType.INTEGER),
         @Result(column="img_path", property="imgPath", jdbcType=JdbcType.VARCHAR),
+        @Result(column="img_src", property="imgSrc", jdbcType=JdbcType.VARCHAR),
+        @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
+        @Result(column="description", property="description", jdbcType=JdbcType.VARCHAR),
+        @Result(column="priority", property="priority", jdbcType=JdbcType.INTEGER),
         @Result(column="create_datetime", property="createDatetime", jdbcType=JdbcType.TIMESTAMP)
     })
     List<AProductImage> selectByProductId(Integer product_id);

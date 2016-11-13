@@ -34,6 +34,13 @@ public interface ProductInfoService {
 	int updateProductInfo(AProduct product);
 	
 	/**
+	 * 更新产品图片
+	 * @param pimg
+	 * @return
+	 */
+	int updateProductImage(AProductImage pimg);
+	
+	/**
 	 * 删除产品信息
 	 * @param id
 	 * @return

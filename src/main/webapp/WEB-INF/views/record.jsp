@@ -452,38 +452,68 @@
 					</div>
 					<div class="row bottom-buffer">
 					  <c:forEach items="${prod_imgs}" var="img">
-						<div class="col-xs-12 col-lg-3">
+						<div class="col-xs-12 col-sm-4 col-lg-3">
 							<div class="fileupload fileupload-exists" data-provides="fileupload" data-picid="${img.id}">
 								<div class="fileupload-preview thumbnail"
 									data-trigger="fileupload" style="width: 200px; height: 150px;">
 									<img src="${img.imgPath}" height="150px" />
 								</div>
 								<div>
-									<span class="btn btn-default btn-file"><span
-										class="fileupload-new">Select image</span><span
-										class="fileupload-exists">Change</span><input type="file"
-										name="file"></span> <a href="#"
-										class="btn btn-default fileupload-exists"
-										data-dismiss="fileupload">Remove</a>
+									<span class="btn btn-default btn-file">
+										<span class="fileupload-new">Select image</span>
+										<span class="fileupload-exists">Change</span>
+										<input type="file" name="file">
+									</span>
+									<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
 								</div>
-								<input type="hidden" name="del" value="" />
+								<input type="hidden" name="del" value=""></input>
+								<input type="hidden" name="imgId" value="${img.id}"></input>
 							</div>
 						</div>
+						<div class="col-xs-12 col-sm-6 col-lg-6 form-horizontal">
+						  <div class="form-group">
+							<label for="imgTitle" class="col-sm-3 control-label">图片标题</label> 
+							<div class="col-sm-8"><input class="form-control" id="imgTitle" name="imgTitle" value="${img.title}"></div>
+						  </div>
+						  <div class="form-group">
+							<label for="imgPrior" class="col-sm-3 control-label">图片优先级</label> 
+							<div class="col-sm-8"><input class="form-control" id="imgPrior" name="imgPrior" value="${img.priority}"></div>
+						  </div><div class="form-group">
+							<label for="imgDesc" class="col-sm-3 control-label">图片描述</label> 
+							<div class="col-sm-8"><textarea class="form-control" id="imgDesc" name="imgDesc" value="" rows="3">${img.description}</textarea></div>
+						  </div>
+						</div>
+						<div class="clearfix"></div>
 					  </c:forEach>
-						<div class="col-xs-12 col-lg-3">
+						<div class="col-xs-12 col-sm-4 col-lg-3">
 							<div class="fileupload fileupload-new" data-provides="fileupload">
 								<div class="fileupload-preview thumbnail"
 									data-trigger="fileupload" style="width: 200px; height: 150px;"></div>
 								<div>
-									<span class="btn btn-default btn-file"><span
-										class="fileupload-new">Select image</span><span
-										class="fileupload-exists">Change</span><input type="file"
-										name="file"></span> <a href="#"
-										class="btn btn-default fileupload-exists"
-										data-dismiss="fileupload">Remove</a>
+									<span class="btn btn-default btn-file">
+										<span class="fileupload-new">Select image</span>
+										<span class="fileupload-exists">Change</span>
+										<input type="file" name="file">
+									</span>
+									<a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
 								</div>
+								<input type="hidden" name="imgId" value=""></input>
 							</div>
 						</div>
+						<div class="col-xs-12 col-sm-6 col-lg-6 form-horizontal">
+						  <div class="form-group">
+							<label for="imgTitle" class="col-sm-3 control-label">图片标题</label> 
+							<div class="col-sm-8"><input class="form-control" id="imgTitle" name="imgTitle" value=""></div>
+						  </div>
+						  <div class="form-group">
+							<label for="imgPrior" class="col-sm-3 control-label">图片优先级</label> 
+							<div class="col-sm-8"><input class="form-control" id="imgPrior" name="imgPrior" value=""></div>
+						  </div><div class="form-group">
+							<label for="imgDesc" class="col-sm-3 control-label">图片描述</label> 
+							<div class="col-sm-8"><textarea class="form-control" id="imgDesc" name="imgDesc" value="" rows="3"></textarea></div>
+						  </div>
+						</div>
+						<div class="clearfix"></div>
 						<div class="col-xs-12 col-lg-3">
 							<button type="button" class="btn btn-lg btn-primary" id="btn-add-image">添加图片</button>
 						</div>
@@ -491,7 +521,7 @@
 					<div class="row bottom-buffer">
 						<div class="col-xs-4">
 							<input type="hidden" id="create_uid" name="create_uid" value="${ product.createUid }"></input>
-							<input type="hidden" id=user_no " name="user_no" value="${ product.updateUid }${userid }"></input>
+							<input type="hidden" id=user_no" name="user_no" value="${ product.updateUid }${userid}"></input>
 							<input type="hidden" id="create_time" name="create_time" value="${ createDate }"></input>
 							<input type="hidden" id="prod_id" name="prod_id" value="${ product.id }"></input>
 							<input type="hidden" id="page" name="page" value="${param['page']}"></input>

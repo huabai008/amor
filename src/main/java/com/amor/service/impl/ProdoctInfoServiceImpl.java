@@ -98,4 +98,9 @@ public class ProdoctInfoServiceImpl implements ProductInfoService {
 	public AProductImage selectTopPriorityImage(Integer product_id) {
 		return prodImgMapper.selectPriorityImage(product_id);
 	}
+
+	@Override
+	public int updateProductImage(AProductImage pimg) {
+		return prodImgMapper.updateByPrimaryKey(pimg);
+	}
 }
