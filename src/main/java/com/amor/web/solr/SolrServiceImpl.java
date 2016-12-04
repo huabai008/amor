@@ -1,4 +1,4 @@
-package com.amor.core.util;
+package com.amor.web.solr;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -7,21 +7,29 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.stereotype.Service;
 
+import com.amor.core.util.ReflectUtils;
 import com.amor.orm.model.Page;
 
 @Service
 public class SolrServiceImpl implements SolrService{
 	
 	@Resource
-	private HttpSolrClient solrClient;
+	private SolrManager solrManager;
+	
+	private SolrClient solrClient;
+	
+	public void setSolrCore(String name){
+		this.solrClient = solrManager.solrClient(name);
+	}
 	
 	/** 
      * 为多个文档对象的，某些属性建立索引 
@@ -107,63 +115,33 @@ public class SolrServiceImpl implements SolrService{
            e.printStackTrace();  
         }  
     }  
-      
-    @SuppressWarnings("unchecked")
-	public <T> T queryById(String id, Class<?> entityClass) {  
-        T obj = null;  
-        try {  
-            obj = (T) entityClass.newInstance();  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
-        SolrQuery query = new SolrQuery();  
-        query.setQuery("id:" + id);  
-        QueryResponse response = null;  
-        try {  
-            response = solrClient.query(query);  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
-        SolrDocumentList docs = response.getResults();  
-        if(null == docs || docs.size() == 0) {  
-            return null;  
-        }  
-        SolrDocument doc = docs.get(0);  
-        ArrayList<Field> fields = ReflectUtils.getAllFields(obj.getClass());  
-        for (Field field : fields) {  
-            String propertyName = field.getName();  
-            Object propertyValue = doc.getFieldValue(propertyName);  
-            if(propertyValue == null)
-            	continue;
-            
-            Class<?> propertyClass = field.getType();  
-            ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
-        }  
-          
-        return obj;  
-    }  
     
-    @SuppressWarnings("unchecked")
-	public <T> T query(String queryStr, Class<?> entityClass) {  
-        T obj = null;  
-        try {  
-            obj = (T) entityClass.newInstance();  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
-        SolrQuery query = new SolrQuery();  
+    /**
+     * 检索
+     */
+    public QueryResponse solrQuery(String queryStr){
+    	SolrQuery query = new SolrQuery();  
         query.setQuery(queryStr);  
         QueryResponse response = null;  
-        try {  
+        try {
             response = solrClient.query(query);  
         } catch (Exception e) {  
             e.printStackTrace();  
+        }
+        return response;
+    }
+    
+    /**
+     * doc转成对象
+     */
+    @SuppressWarnings("unchecked")
+	private <T> T doc2obj(SolrDocument doc, Class<?> entityClass){
+    	T obj = null;  
+        try {  
+            obj = (T) entityClass.newInstance();  
+        } catch (Exception e) {  
+            e.printStackTrace();  
         }  
-        SolrDocumentList docs = response.getResults();  
-        if(null == docs || docs.size() == 0) {  
-            return null;  
-        }  
-        SolrDocument doc = docs.get(0);  
         ArrayList<Field> fields = ReflectUtils.getAllFields(obj.getClass());  
         for (Field field : fields) {  
             String propertyName = field.getName();  
@@ -172,17 +150,64 @@ public class SolrServiceImpl implements SolrService{
             	continue;
             
             Class<?> propertyClass = field.getType();  
-            ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
+            try{
+            	ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
+            }catch(Exception e){
+            	System.out.println(propertyName + "/" + propertyValue + " " + propertyClass.getName() + "/" + propertyValue.getClass());
+            	e.printStackTrace();
+            }
         }  
-          
-        return obj;  
+        return obj;
+    }
+    
+    /**
+     * 通过id检索
+     */
+    public <T> T queryById(Integer id, Class<?> entityClass) {  
+        return queryFirst("id:"+id, entityClass);  
     }  
+    
+    /**
+     * 检索返回第一条
+     */
+	public <T> T queryFirst(String queryStr, Class<?> entityClass) {  
+    	QueryResponse response = solrQuery(queryStr);
+        SolrDocumentList docs = response.getResults();  
+        if(null == docs || docs.size() == 0) {  
+            return null;  
+        }  
+        SolrDocument doc = docs.get(0);  
+        return doc2obj(doc, entityClass);
+    }
+    
+	/**
+     * 检索返回所有
+     */
+	public <T> List<T> query(String queryStr, Class<?> entityClass) {  
+    	QueryResponse response = solrQuery(queryStr);
+        SolrDocumentList docs = response.getResults();  
+        if(null == docs || docs.size() == 0) {  
+            return null;  
+        } 
+        List<T> result = new ArrayList<>();
+        for(SolrDocument doc:docs){
+            result.add(doc2obj(doc, entityClass));
+        }
+        return result;  
+    }  
+	
+	/**
+     * 检索分面
+     */
+	public List<FacetField> queryFacet(String queryStr) {  
+    	QueryResponse response = solrQuery(queryStr);
+    	return response.getFacetDates();
+    } 
       
     /** 
-     * solr获取的分页对象 
+     * solr获取的分页对象, Page待定 
      *  
      */  
-    @SuppressWarnings("unchecked")  
     public <T> Page<T> getPage(Page<T> page, SolrQuery solrQuery, Class<?> entityClass) {  
         solrQuery.setStart(page.getStartPage());
         solrQuery.setRows(page.getPageSize());
@@ -193,26 +218,9 @@ public class SolrServiceImpl implements SolrService{
             e.printStackTrace();  
         }  
         SolrDocumentList docs = queryResponse.getResults();  
-        List<T> list = new ArrayList<T>(0);  
-          
+        List<T> list = new ArrayList<T>();  
         for(SolrDocument doc : docs){  
-            T obj = null;  
-            try {  
-                obj =  (T) entityClass.newInstance();  
-            } catch (Exception e) {  
-                e.printStackTrace();  
-            }  
-            ArrayList<Field> fields = ReflectUtils.getAllFields(obj.getClass());  
-            for (Field field : fields) {  
-                String propertyName = field.getName();  
-                Object propertyValue = doc.getFieldValue(propertyName);
-                if(propertyValue == null)
-                	continue;
-                
-                Class<?> propertyClass = field.getType();  
-                ReflectUtils.setFieldValue(obj, propertyClass, propertyName, propertyValue);  
-            }  
-            list.add(obj);  
+            list.add(doc2obj(doc, entityClass));  
         }  
         page.setTotalRecord(docs.size());  
         page.setResults(list);  

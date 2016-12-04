@@ -12,8 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.amor.core.util.Constants;
-import com.amor.core.util.SolrServiceImpl;
 import com.amor.orm.model.AProduct;
+import com.amor.web.solr.SolrService;
 
 /**
  * 公共控制器
@@ -24,7 +24,7 @@ import com.amor.orm.model.AProduct;
 @Controller
 public class CommonController {
 	@Resource
-	private SolrServiceImpl solrService;
+	private SolrService solrService;
 	/**
 	 * 首页
 	 */
@@ -33,8 +33,8 @@ public class CommonController {
 	public String index(HttpServletRequest request, Model model){
 		Subject subject = SecurityUtils.getSubject();
 		model.addAttribute("userid", subject.getSession().getAttribute(Constants.USER_ID));
-		
-		AProduct p = solrService.queryById("11", AProduct.class);
+		solrService.setSolrCore(Constants.SOLRSERVICE_PRODUCT);
+		AProduct p = solrService.queryById(6, AProduct.class);
 		System.out.println(p);
 		
 		return "index";
