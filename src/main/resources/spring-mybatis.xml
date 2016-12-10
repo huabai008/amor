@@ -53,16 +53,27 @@
 		<property name="removeAbandonedTimeout" value="120"></property>
 	</bean>
 	
-	<!-- solr -->
+  <!-- solr -->
 	<bean id="solrManager" class="com.amor.web.solr.SolrManagerImpl">
 		<!-- 
 		<constructor-arg value="${solr.url}"></constructor-arg>
 		-->
 	</bean>
-	
+  
 	<!-- Session工厂 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
+		<property name="plugins">
+		    <array>
+		      <bean class="com.github.pagehelper.PageHelper">
+		        <property name="properties">
+		          <value>
+		            dialect=mysql
+		          </value>
+		        </property>
+		      </bean>
+		    </array>
+		  </property>
 	</bean>
 	
 	<!-- mybatis 扫描所有的mapper -->
@@ -114,4 +125,5 @@
 	
 	<!-- 注解方式配置缓存 -->
 	<cache:annotation-driven cache-manager="cacheManager"/>
+  
 </beans>
