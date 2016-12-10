@@ -30,7 +30,7 @@ public interface ARolePermissionMapper {
      * @mbggenerated Sun Oct 16 16:13:26 CST 2016
      */
     @Insert({
-        "insert into A_ROLE_PERMISSION (id, role_id, ",
+        "replace into A_ROLE_PERMISSION (id, role_id, ",
         "permission_id)",
         "values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, ",
         "#{permissionId,jdbcType=INTEGER})"

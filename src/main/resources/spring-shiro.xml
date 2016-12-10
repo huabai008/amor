@@ -31,6 +31,8 @@
 				/app/**=anon
 				/assets/** = anon
 				/rest/**/login=anon
+				/rest/**/register=anon
+				/rest/**/forgetPWD=anon
 				/rest/**/logout = logout
 				<!-- protected -->
 				/rest/auth/**=authc
@@ -102,5 +104,5 @@
     
     <!-- Shiro密码MD5加密 -->
     <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"></bean>          
-          
+
 </beans>
