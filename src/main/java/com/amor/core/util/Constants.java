@@ -13,4 +13,11 @@ public class Constants {
 	
 	public static final String USER_INFO = "_USER_INFO";
 	
+	
+	
+	/**
+	 * 规范一些配置的字符串
+	 */
+	public static final String SOLRSERVICE_PRODUCT = "product_core";
+	
 }
