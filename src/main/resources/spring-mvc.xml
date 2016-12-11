@@ -67,4 +67,5 @@
 	
 	<!-- 处理静态文件 -->
 	<mvc:default-servlet-handler/>
+
 </beans>

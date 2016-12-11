@@ -10,9 +10,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-	  		classpath:spring-mybatis.xml
-	  		classpath:spring-shiro.xml
-	  	</param-value>
+      classpath:spring-mybatis.xml
+      classpath:spring-shiro.xml
+    </param-value>
 	</context-param>
 
 	<!-- Spring Context 监听器 -->
@@ -98,6 +98,10 @@
 	</error-page>
 	
 	<!-- 处理静态文件 -->
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.js</url-pattern>

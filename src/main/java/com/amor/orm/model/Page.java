@@ -42,5 +42,5 @@ public class Page<T> {
 	public void setResults(List<T> results) {
 		this.results = results;
 	}
-
+  
 }
