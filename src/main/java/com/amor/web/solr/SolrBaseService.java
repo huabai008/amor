@@ -1,13 +1,12 @@
 package com.amor.web.solr;
 
 import java.util.List;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.amor.orm.model.Page;
+import com.amor.orm.model.PageForSolr;
 
-public interface SolrService {
+public interface SolrBaseService {
+	public boolean hasCore();
+	
 	public void setSolrCore(String corename);
 	
 	public <T> void addDocs(List<T> list, List<String> properties);  
@@ -22,17 +21,15 @@ public interface SolrService {
       
     public void deleteByQuery(String query);  
     
-    public QueryResponse solrQuery(String queryStr);
-      
     public <T> T queryById(Integer id, Class<?> entityClass);
     
     public <T> T queryFirst(String query, Class<?> entityClass);
     
     public <T> List<T> query(String query, Class<?> entityClass);
     
-    public List<FacetField> queryFacet(String queryStr);
-    
-    public <T> Page<T> getPage(Page<T> page, SolrQuery solrQuery, Class<?> entityClass);  
+    public <T> PageForSolr<T> getPage(PageForSolr<T> page, Class<?> entityClass);  
       
-    public void optimize(String collection);  
+    public void optimize();
+
+	public <T> PageForSolr<T> getPage(PageForSolr<T> page);  
 }

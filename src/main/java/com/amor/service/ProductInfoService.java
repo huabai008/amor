@@ -100,4 +100,6 @@ public interface ProductInfoService {
 	 * @return List<AProduct> paged product information
 	 */
 	List<AProduct> queryProductByPage(Integer pageNum, Integer pageSize);
+
+	List<AProduct> selectAll();
 }

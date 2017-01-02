@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.amor.core.util.Constants;
 import com.amor.orm.model.AProduct;
-import com.amor.web.solr.SolrService;
+import com.amor.web.solr.SolrBaseService;
 
 /**
  * 公共控制器
@@ -24,7 +24,7 @@ import com.amor.web.solr.SolrService;
 @Controller
 public class CommonController {
 	@Resource
-	private SolrService solrService;
+	private SolrBaseService solrService;
 	/**
 	 * 首页
 	 */
