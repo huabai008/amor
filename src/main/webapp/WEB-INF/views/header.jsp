@@ -13,6 +13,10 @@
 <!-- Bootstrap Core CSS -->
 <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- Bootstrap THEMES CSS -->
+<link href="assets/css/style.css" rel="stylesheet" type="text/css" />
+<link href="assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color" />
+
 <!-- Custom CSS -->
 <link href="assets/css/modern-business.css" rel="stylesheet">
 

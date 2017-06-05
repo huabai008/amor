@@ -1,11 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<div class="logo">
-	<a href="">
-		<img src="assets/img/bg/logo.png" alt="Amor" />
-	</a>
-</div>
 <!-- Navigation -->
-<nav class="navbar navbar-inverse" role="navigation">
+<nav class="header navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
@@ -30,3 +25,52 @@
 	</div>
 	<!-- /.container -->
 </nav>
+<div class="header-logo">
+	<a href="">
+		<img src="assets/img/bg/logo.png" alt="Amor" />
+	</a>
+</div>
+<div class="page-container main-menu">
+	<div class="container">
+	   <ul class="nav">
+	       <li class="start active">
+	           <a href="rest/page/dashboard" id="btn-dashboard">
+	               <span class="title"> 婚纱 </span><span
+	               class="selected"> </span>
+	           </a>
+	       </li>
+	
+	       <li class="">
+	           <a href="javascript:;">
+	               <span class="title"> 晚礼服 </span><span
+	               class="arrow "> </span>
+	           </a>
+	       </li>
+		   <li class="">
+	           <a href="javascript:;">
+	               <span class="title"> 男装 </span><span
+	               class="arrow "> </span>
+	           </a>
+	       </li>
+	       <li class="">
+	           <a href="javascript:;">
+	               <span class="title"> 媒体 </span><span
+	               class="arrow "> </span>
+	           </a>
+	       </li>
+	       <li class="">
+	           <a href="javascript:;">
+	               <span class="title"> 店铺 </span><span
+	               class="arrow "> </span>
+	           </a>
+	       </li>
+	       <li class="">
+	           <a href="javascript:;">
+	               <span class="title"> 预约 </span><span
+	               class="arrow "> </span>
+	           </a>
+	       </li>
+	
+	   </ul>
+   </div>
+</div>
