@@ -12,15 +12,56 @@ body {
 }
 
 body {
-    padding-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    /* padding-top: 50px; Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+.logo {
+	text-align: center;
+	margin: 0;
+}
+
+.logo img{
+	height: 140px;
+}
+
+.navbar{
+	margin-bottom: 0px;
+}
+
+.navbar-inverse{
+	background-color: #34352C;
+	border-color: #34352C;
+}
+
+.search-box {
+	margin: 20px 0;
+}
+
+.facet-wrapper {
+	margin-bottom: 25px;
 }
 
 .img-portfolio {
     margin-bottom: 30px;
 }
 
+.detail-info {
+	margin: 28% 0;
+}
+
+.detail-slide {
+	width: 80%;
+	margin: 0 auto;
+}
+
 .img-hover:hover {
     opacity: 0.8;
+}
+
+.img-detail {
+	display: block;
+	max-width: 80%;
+	height: 50%;
 }
 
 /* Home Page Carousel */
