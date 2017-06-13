@@ -8,7 +8,7 @@
 <jsp:include page="header.jsp"></jsp:include>
 <title>Amor Weddings - The Best Moment Throughout Your Life</title>
 </head>
-<body>
+<body class="page-header-fixed">
 	<jsp:include page="menu.jsp"></jsp:include>
 
 	<!-- Header Carousel -->
@@ -157,10 +157,10 @@
 			</div>
 		</div>
 		<!-- /.row -->
-
-		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
 	<!-- /.container -->
+	
+	<jsp:include page="footer.jsp"></jsp:include>
 
 	<!-- Script to Activate the Carousel -->
 	<script>
