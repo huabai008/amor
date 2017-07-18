@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.amor.core.base.BaseMapper;
+import com.amor.core.base.BaseServiceImpl;
 import com.amor.orm.mapper.ABusinessDictMapper;
 import com.amor.orm.mapper.AProductImageMapper;
 import com.amor.orm.mapper.AProductMapper;
@@ -18,7 +20,7 @@ import com.amor.service.ProductInfoService;
 import com.github.pagehelper.PageHelper;
 
 @Service
-public class ProdoctInfoServiceImpl implements ProductInfoService {
+public class ProductInfoServiceImpl extends BaseServiceImpl<AProduct, Integer> implements ProductInfoService {
 
 	@Resource
 	private AProductMapper productMapper;
@@ -102,5 +104,15 @@ public class ProdoctInfoServiceImpl implements ProductInfoService {
 	@Override
 	public int updateProductImage(AProductImage pimg) {
 		return prodImgMapper.updateByPrimaryKey(pimg);
+	}
+
+	@Override
+	public BaseMapper<AProduct, Integer> getMapper() {
+		return productMapper;
+	}
+
+	@Override
+	public List<AProduct> selectAll() {
+		return productMapper.selectAll();
 	}
 }

@@ -10,9 +10,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-  		classpath:spring-mybatis.xml
-  		classpath:spring-shiro.xml
-  	</param-value>
+      classpath:spring-mybatis.xml
+      classpath:spring-shiro.xml
+    </param-value>
 	</context-param>
 
 	<!-- Spring Context 监听器 -->
@@ -125,9 +125,13 @@
 	<servlet-mapping>
         	<servlet-name>default</servlet-name>
         	<url-pattern>*.woff</url-pattern>
-   	 </servlet-mapping>
-    	<servlet-mapping>
-        	<servlet-name>default</servlet-name>
-        	<url-pattern>*.woff2</url-pattern>
-    	</servlet-mapping>
+   	</servlet-mapping>
+   	<servlet-mapping>
+       	<servlet-name>default</servlet-name>
+       	<url-pattern>*.woff2</url-pattern>
+   	</servlet-mapping>
+   	<servlet-mapping>
+       	<servlet-name>default</servlet-name>
+       	<url-pattern>*.map</url-pattern>
+   	</servlet-mapping>
 </web-app>

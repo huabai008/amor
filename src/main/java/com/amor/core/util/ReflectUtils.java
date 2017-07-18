@@ -7,7 +7,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.util.Assert;
@@ -159,9 +158,6 @@ public class ReflectUtils {
 
 	/**
 	 * 得到对象属性的值
-	 * 
-	 * @param model
-	 * @param prepertyName
 	 */
 	public static void setFieldValue(Object model, String prepertyName, String value) {
 		Class<?>[] plusPara = { String.class };
@@ -180,13 +176,6 @@ public class ReflectUtils {
 
 	/**
 	 * 给某个对象的属性设置
-	 * 
-	 * @author wuyw
-	 * @date 2015-8-31 上午12:50:31
-	 * @param model
-	 * @param propertyClass
-	 * @param propertyName
-	 * @param propertyValue
 	 */
 	public static void setFieldValue(Object model, Class<?> propertyClass, String propertyName, Object propertyValue) {
 		Class<?>[] plusPara = { propertyClass };
@@ -201,9 +190,6 @@ public class ReflectUtils {
 
 	/**
 	 * 得到对象属性的值
-	 * 
-	 * @param model
-	 * @param prepertyName
 	 */
 	public static void setFieldCharValue(Object model, String prepertyName, Character value) {
 		Class<?>[] plusPara = { Character.class };
@@ -219,10 +205,6 @@ public class ReflectUtils {
 
 	/**
 	 * 得到类属性的类型
-	 * 
-	 * @param class1
-	 * @param propertyName
-	 * @return
 	 */
 	public static Class<?> getFieldClass(Class<?> class1, String propertyName) {
 		try {
@@ -249,13 +231,7 @@ public class ReflectUtils {
 	}
 
 	/**
-	 * 通过反射,获得Class定义中声明的父类的泛型参数的类型. 如无法找到, 返回Object.class. eg. public UserDao
-	 * extends HibernateDao<User>
-	 * 
-	 * @param clazz
-	 *            The class to introspect
-	 * @return the first generic declaration, or Object.class if cannot be
-	 *         determined
+	 * 通过反射,获得Class定义中声明的父类的泛型参数的类型.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Class<T> getSuperClassGenricType(final Class clazz) {
@@ -263,16 +239,7 @@ public class ReflectUtils {
 	}
 
 	/**
-	 * 通过反射,获得定义Class时声明的父类的泛型参数的类型. 如无法找到, 返回Object.class.
-	 * 
-	 * 如public UserDao extends HibernateDao<User,Long>
-	 * 
-	 * @param clazz
-	 *            clazz The class to introspect
-	 * @param index
-	 *            the Index of the generic ddeclaration,start from 0.
-	 * @return the index generic declaration, or Object.class if cannot be
-	 *         determined
+	 * 通过反射,获得定义Class时声明的父类的泛型参数的类型.
 	 */
 	@SuppressWarnings("rawtypes")
 	public static Class getSuperClassGenricType(final Class clazz, final int index) {
@@ -296,11 +263,6 @@ public class ReflectUtils {
 
 	/**
 	 * 转换字符串到相应类型.
-	 * 
-	 * @param value
-	 *            待转换的字符串
-	 * @param toType
-	 *            转换目标类型
 	 */
 	public static Object convertStringToObject(String value, Class<?> toType) {
 		try {

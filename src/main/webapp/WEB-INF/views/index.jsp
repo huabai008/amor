@@ -1,189 +1,138 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
 <html lang="en">
-
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Amor Weddings - The Best Moment Throughout Your Life</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="assets/css/modern-business.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
+<jsp:include page="header.jsp"></jsp:include>
+<title>Amor Weddings - The Best Moment Throughout Your Life</title>
 </head>
+<body class="page-header-fixed">
+	<jsp:include page="menu.jsp"></jsp:include>
 
-<body>
+	<!-- Page Content -->
+	<div class="container">
+        <div class="row margin-top-32">
+            <div class="col-lg-8">
+                <!-- Header Carousel -->
+                <header id="myCarousel" class="carousel slide">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="<%=basePath%>">Amor Weddings</a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="<%=basePath%>">首页</a>
-                    </li>
-                    <li>
-                        <a href="about.html">About</a>
-                    </li>
-                    <li>
-                        <a href="services.html">Services</a>
-                    </li>
-                    <li>
-                        <a href="contact.html">Contact</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="portfolio-1-col.html">1 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-2-col.html">2 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-3-col.html">3 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-4-col.html">4 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-item.html">Single Portfolio Item</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="blog-home-1.html">Blog Home 1</a>
-                            </li>
-                            <li>
-                                <a href="blog-home-2.html">Blog Home 2</a>
-                            </li>
-                            <li>
-                                <a href="blog-post.html">Blog Post</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other Pages <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="full-width.html">Full Width Page</a>
-                            </li>
-                            <li>
-                                <a href="sidebar.html">Sidebar Page</a>
-                            </li>
-                            <li>
-                                <a href="faq.html">FAQ</a>
-                            </li>
-                            <li>
-                                <a href="404.html">404</a>
-                            </li>
-                            <li>
-                                <a href="pricing.html">Pricing Table</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <div class="fill" style="background-image: url('assets/img/gallery/slide842x626-1.jpg');"></div>
+                            <div class="carousel-caption">
+                                <h2>2013 Wedding Dress Pronovias Costura Collection</h2>
+                                <div class="buttons-on-roller">
+                                    <a class="btn btn-default" href="#" role="button">更多新款</a>
+                                    <a class="btn btn-default" href="#" role="button">预约试纱</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="fill" style="background-image: url('assets/img/gallery/slide842x626-2.jpg');"></div>
+                            <div class="carousel-caption">
+                                <h2>Caption 2</h2>
+                                <div class="buttons-on-roller">
+                                    <a class="btn btn-default" href="#" role="button">更多新款</a>
+                                    <a class="btn btn-default" href="#" role="button">预约试纱</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="fill" style="background-image: url('assets/img/gallery/slide842x626-3.jpg');"></div>
+                            <div class="carousel-caption">
+                                <h2>Caption 3</h2>
+                                <div class="buttons-on-roller">
+                                    <a class="btn btn-default" href="#" role="button">更多新款</a>
+                                    <a class="btn btn-default" href="#" role="button">预约试纱</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- Header Carousel -->
-    <header id="myCarousel" class="carousel slide">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-        </ol>
-
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="fill" style="background-image:url('assets/img/gallery/2013-wedding-dress-pronovias-costura-collection.jpg');"></div>
-                <div class="carousel-caption">
-                    <h2>2013 Wedding Dress Pronovias Costura Collection</h2>
-                </div>
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev"> <span class="icon-prev"></span>
+                    </a> <a class="right carousel-control" href="#myCarousel" data-slide="next"> <span class="icon-next"></span>
+                </a>
+                </header>
             </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('assets/img/gallery/image3.jpg');"></div>
-                <div class="carousel-caption">
-                    <h2>Caption 2</h2>
-                </div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('assets/img/gallery/item_img.jpg');"></div>
-                <div class="carousel-caption">
-                    <h2>Caption 3</h2>
+            <div class="col-lg-4 text-center">
+                <div class="thumbnail borderless">
+                    <h2>Request an appointment</h2>
+                    <h3>NYC</h3>
+                    <h3>Fashion Group</h3>
+                    <img src="assets/img/gallery/appointment350x293.jpg" alt="" />
+                    <h3>本季主打</h3>
+                    <p>Details here...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="icon-prev"></span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="icon-next"></span>
-        </a>
-    </header>
+        <div class="row">
+            <div class="col-lg-12" id="wide-media">
+                <a href="#">
+                    <div class="play-button-wrapper text-center">
+                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
+                    </div>
+                    <div>
+                        <img src="assets/img/gallery/banner1140x180.jpg" alt="">
+                    </div>
+                </a>
+            </div>
+        </div>
 
-    <!-- Page Content -->
-    <div class="container">
+		<!-- Portfolio Section -->
+		<div class="row">
+			<div class="col-md-4 col-sm-6">
+                <div class="thumbnail-borderless text-center">
+                    <img class="img-responsive img-portfolio img-hover" src="assets/img/gallery/category300x400-l.jpg" alt="" />
+                    <h3>婚纱</h3>
+                    <p>Amor Fashion Group</p>
+                    <a href="#" class="btn btn-default">Learn More</a>
+                </div>
+			</div>
+			<div class="col-md-4 col-sm-6">
+                <div class="thumbnail-borderless text-center">
+                    <img class="img-responsive img-portfolio img-hover" src="assets/img/gallery/category300x400-m.jpg" alt="" />
+                    <h3>礼服</h3>
+                    <p>Amor Fashion Group</p>
+                    <a href="#" class="btn btn-default">Learn More</a>
+                </div>
+			</div>
+			<div class="col-md-4 col-sm-6">
+                <div class="thumbnail-borderless text-center">
+                    <img class="img-responsive img-portfolio img-hover" src="assets/img/gallery/category300x400-r.jpg" alt="" />
+                    <h3>男装</h3>
+                    <p>Amor Fashion Group</p>
+                    <a href="#" class="btn btn-default">Learn More</a>
+                </div>
+			</div>
+		</div>
+		<!-- /.row -->
 
         <!-- Marketing Icons Section -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">
-                    Welcome to Amor Weddings
-                </h1>
-            </div>
+        <div class="row margin-top-32">
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-check"></i> New Dress Coming</h4>
+                        <h4>
+                            <i class="fa fa-fw fa-check"></i> 品牌故事
+                        </h4>
                     </div>
                     <div class="panel-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?</p>
+                        <div class="thumbnail borderless">
+                            <img src="assets/img/gallery/thumb700x450-l.jpg" alt="" />
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus
+                            eveniet incidunt dicta nostrum quod?</p>
                         <a href="#" class="btn btn-default">Learn More</a>
                     </div>
                 </div>
@@ -191,10 +140,16 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-gift"></i> Promotion Gifts &amp; Coupons</h4>
+                        <h4>
+                            <i class="fa fa-fw fa-gift"></i> 商业合作
+                        </h4>
                     </div>
                     <div class="panel-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?</p>
+                        <div class="thumbnail borderless">
+                            <img src="assets/img/gallery/thumb700x450-m.jpg" alt="" />
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus
+                            eveniet incidunt dicta nostrum quod?</p>
                         <a href="#" class="btn btn-default">Learn More</a>
                     </div>
                 </div>
@@ -202,10 +157,16 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="fa fa-fw fa-compass"></i> Business Opportunities</h4>
+                        <h4>
+                            <i class="fa fa-fw fa-compass"></i> 加入我们
+                        </h4>
                     </div>
                     <div class="panel-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?</p>
+                        <div class="thumbnail borderless">
+                            <img src="assets/img/gallery/thumb700x450-r.jpg" alt="" />
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus
+                            eveniet incidunt dicta nostrum quod?</p>
                         <a href="#" class="btn btn-default">Learn More</a>
                     </div>
                 </div>
@@ -213,96 +174,43 @@
         </div>
         <!-- /.row -->
 
-        <!-- Portfolio Section -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="page-header">Portfolio Heading</h2>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <a href="portfolio-item.html">
-                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <a href="portfolio-item.html">
-                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <a href="portfolio-item.html">
-                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <a href="portfolio-item.html">
-                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <a href="portfolio-item.html">
-                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <a href="portfolio-item.html">
-                    <img class="img-responsive img-portfolio img-hover" src="http://placehold.it/700x450" alt="">
-                </a>
-            </div>
-        </div>
-        <!-- /.row -->
+		<!-- Features Section -->
+		<div class="row">
+			<div class="col-lg-12">
+				<h2 class="page-header">客户故事</h2>
+			</div>
+			<div class="col-md-6">
+				<p>Pronovias is an internationally renowned firm that dresses brides in more than 105 countries through a network of 123 stores and more than 4,000 points of sale. Spain is the world’s number
+					two exporter of bridal fashion.:</p>
+				<ul>
+					<li><strong>PRESENCE IN</strong></li>
+					<li>Cocktail</li>
+					<li>Bride</li>
+					<li>Five decades of experience</li>
+					<li>Making each piece unique</li>
+					<li>three international logistics centres</li>
+				</ul>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, omnis doloremque non cum id reprehenderit, quisquam totam aspernatur tempora minima unde aliquid ea culpa sunt.
+					Reiciendis quia dolorum ducimus unde.</p>
+                <button type="button" class="btn btn-default">更多...</button>
+			</div>
+			<div class="col-md-6">
+				<img class="img-responsive" src="assets/img/gallery/media700x450.jpg" alt="">
+			</div>
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /.container -->
+	
+	<jsp:include page="footer.jsp"></jsp:include>
 
-        <!-- Features Section -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="page-header">Brand Story</h2>
-            </div>
-            <div class="col-md-6">
-                <p>Pronovias is an internationally renowned firm that dresses brides in more 
-                than 105 countries through a network of 123 stores and more than 4,000 points 
-                of sale. Spain is the world’s number two exporter of bridal fashion.:</p>
-                <ul>
-                    <li><strong>PRESENCE IN</strong>
-                    </li>
-                    <li>Cocktail</li>
-                    <li>Bride</li>
-                    <li>Five decades of experience</li>
-                    <li>Making each piece unique</li>
-                    <li>three international logistics centres</li>
-                </ul>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, omnis doloremque non cum id reprehenderit, quisquam totam aspernatur tempora minima unde aliquid ea culpa sunt. Reiciendis quia dolorum ducimus unde.</p>
-            </div>
-            <div class="col-md-6">
-                <img class="img-responsive" src="http://placehold.it/700x450" alt="">
-            </div>
-        </div>
-        <!-- /.row -->
-
-        <hr>
-
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
-                </div>
-            </div>
-        </footer>
-
-    </div>
-    <!-- /.container -->
-
-    <!-- jQuery -->
-    <script src="assets/plugins/jquery/jquery-1.11.1.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Script to Activate the Carousel -->
-    <script>
-    $('.carousel').carousel({
-        interval: 5000 //changes the speed
-    })
-    </script>
+	<!-- Script to Activate the Carousel -->
+	<script>
+		$('.carousel').carousel({
+			interval : 5000
+		//changes the speed
+		})
+	</script>
 
 </body>
 

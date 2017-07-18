@@ -12,21 +12,53 @@ body {
 }
 
 body {
-    padding-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    /* padding-top: 50px; Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+.header-logo {
+	text-align: center;
+	margin: 30px 0px 0px 0px;
+}
+
+.header-logo img{
+	height: 140px;
+}
+
+.search-box {
+	margin: 20px 0;
+}
+
+.facet-wrapper {
+	margin-bottom: 25px;
 }
 
 .img-portfolio {
     margin-bottom: 30px;
 }
 
+.detail-info {
+	margin: 28% 0;
+}
+
+.detail-slide {
+	width: 80%;
+	margin: 0 auto;
+}
+
 .img-hover:hover {
     opacity: 0.8;
+}
+
+.img-detail {
+	display: block;
+	max-width: 80%;
+	height: 50%;
 }
 
 /* Home Page Carousel */
 
 header.carousel {
-    height: 50%;
+    height: 100%;
 }
 
 header.carousel .item,
@@ -40,6 +72,33 @@ header.carousel .fill {
     height: 100%;
     background-position: center;
     background-size: cover;
+}
+
+#myCarousel {
+    height: 557px;
+}
+
+#wide-media {
+    margin: 38px 0px;
+    font-size: xx-large;
+}
+
+.play-button-wrapper {
+    position: absolute;
+    width:100%;
+    margin-top: 2em;
+}
+
+.margin-top-32 {
+    margin-top: 32px;
+}
+
+#wide-media span.glyphicon {
+    color: honeydew;
+}
+
+#wide-media img {
+    width: 100%;
 }
 
 /* Contact */
@@ -70,6 +129,10 @@ header.carousel .fill {
 .period {
     display: block;
     font-style: italic;
+}
+
+.thumbnail.borderless {
+    border: none;
 }
 
 /* Footer Styles */
