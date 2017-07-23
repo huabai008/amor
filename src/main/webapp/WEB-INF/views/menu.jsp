@@ -35,14 +35,14 @@
 		<div class="center-block"  style="display: table;">
 	   <ul class="nav">
 	       <li class="start active">
-	           <a href="rest/page/dashboard" id="btn-dashboard">
+	           <a href="rest/page/index" id="btn-dashboard">
 	               <span class="title"> 婚纱 </span><span
 	               class="selected"> </span>
 	           </a>
 	       </li>
 	
 	       <li class="">
-	           <a href="javascript:;">
+	           <a href="rest/page/weddingdress">
 	               <span class="title"> 晚礼服 </span><span
 	               class="arrow "> </span>
 	           </a>
@@ -60,7 +60,7 @@
 	           </a>
 	       </li>
 	       <li class="">
-	           <a href="javascript:;">
+	           <a href="rest/page/store">
 	               <span class="title"> 店铺 </span><span
 	               class="arrow "> </span>
 	           </a>
