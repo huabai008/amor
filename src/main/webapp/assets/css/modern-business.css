@@ -58,7 +58,7 @@ body {
 /* Home Page Carousel */
 
 header.carousel {
-    height: 50%;
+    height: 100%;
 }
 
 header.carousel .item,
@@ -72,6 +72,33 @@ header.carousel .fill {
     height: 100%;
     background-position: center;
     background-size: cover;
+}
+
+#myCarousel {
+    height: 557px;
+}
+
+#wide-media {
+    margin: 38px 0px;
+    font-size: xx-large;
+}
+
+.play-button-wrapper {
+    position: absolute;
+    width:100%;
+    margin-top: 2em;
+}
+
+.margin-top-32 {
+    margin-top: 32px;
+}
+
+#wide-media span.glyphicon {
+    color: honeydew;
+}
+
+#wide-media img {
+    width: 100%;
 }
 
 /* Contact */
@@ -102,6 +129,10 @@ header.carousel .fill {
 .period {
     display: block;
     font-style: italic;
+}
+
+.thumbnail.borderless {
+    border: none;
 }
 
 /* Footer Styles */

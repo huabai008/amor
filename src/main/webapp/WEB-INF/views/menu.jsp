@@ -32,6 +32,7 @@
 </div>
 <div class="page-container main-menu">
 	<div class="container">
+		<div class="center-block"  style="display: table;">
 	   <ul class="nav">
 	       <li class="start active">
 	           <a href="rest/page/dashboard" id="btn-dashboard">
@@ -72,5 +73,6 @@
 	       </li>
 	
 	   </ul>
+		</div>
    </div>
 </div>
